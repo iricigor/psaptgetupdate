@@ -1,39 +1,38 @@
-# PowerShell apt-get update
+# PowerShell's apt-get update
 
-This module provides functionality for PowerShellGet inspired by apt-get update command. This is only proof-of-concept work.
+This module provides functionality for PowerShellGet inspired by `apt-get update` Linux command. This is only proof-of-concept work.
 
 ## Explanation
+
+TBD
 
 ## Commands
 
 This module provides following commands:
 
-### Server side
+### Cache Management
 
-- `New-Index` - generates zipped index file and uploads it to storage account
+- `Update-PSRepositoryCache` - Downloads index file and expands it to local cache, equivalent to `apt-get update`
+- `New-PSRepositoryCache` - Generates zipped index file and uploads it to storage account. This is running as scheduled task on dedicated server. It can be also executed locally.
 
-### Client cache
+### Search and Update Operations
 
-- `Update-Index` - downloads index file and expands it to local cache
+- `Find-ModuleFromCache`  - finds modules in local cache
+- `Find-ScriptFromCache`  - finds scripts in local cache
+- `Find-CommandFromCache` - finds command in local cache
 
-### Search operations
+Search operations run on low end computer in less than 100ms. In future, these might be implemented as extension to equivalent commands from PowerShellGet.
 
-- `Find-ModuleInCache`  - finds modules in local cache
-- `Find-ScriptInCache`  - finds scripts in local cache
-- `Find-CommandInCache` - finds command in local cache
+### Update operations
 
-Search operations run on low end computer in less than 100ms.
-
-### Upgrade operations
-
-- `Update-ModuleInCache` - finds updatable modules in local cache, and triggers updates, **it accepts wildcard '*'**; for POC it supports -WhatIf simulation only
+- `Update-ModuleFromCache` - finds updatable modules in local cache, it **accepts wildcard '*'**; for POC it supports -WhatIf simulation only
 
 ## Examples
 
 ### Update-Index
 
 ```PowerShell
-Update-Index
+Update-PSRepositoryCache
 ```
 
 Creates local repository cache. Internet connection is required. Should be run first, before other examples.
@@ -41,7 +40,7 @@ Creates local repository cache. Internet connection is required. Should be run f
 ### Find-Command
 
 ```PowerShell
-Find-CommandInCache 'Get-Folder' | Select -First 3
+Find-CommandFromCache 'Get-Folder' | Select -First 3
 ```
 
 ```
@@ -55,12 +54,12 @@ PSFolderSize              Get-Folder 1.6.3           PSGallery
 ### Update all modules
 
 ```PowerShell
-Update-ModuleInCache * -WhatIf
+Update-ModuleFromCache * -WhatIf
 ```
 
 TBD
 
-## Links
+## External Links
 
 - **`apt-get update`** - [man page](https://linux.die.net/man/8/apt-get), [askubuntu.com](https://askubuntu.com/questions/222348/what-does-sudo-apt-get-update-do)
 - **`PowerShellGet`** - [MSFT docs](https://docs.microsoft.com/en-us/powershell/module/powershellget), [GitHub repo](https://github.com/PowerShell/PowerShellGet)

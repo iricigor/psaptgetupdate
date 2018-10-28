@@ -1,7 +1,7 @@
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost','')]
 param()
 
-$ModName = 'AptGetUpdate'
+$ModName = 'PSAptGetUpdate'
 Get-Module $ModName | Remove-Module -Force
 
 Write-Host "`n`n$ModName module import starting`n" -ForegroundColor Cyan
@@ -18,10 +18,12 @@ Write-Host "`n`n$ModName module import starting`n" -ForegroundColor Cyan
 
 $Public = @(Get-ChildItem (Join-Path $PSScriptRoot 'Public') -Filter *.ps1)
 $Private = @(Get-ChildItem (Join-Path $PSScriptRoot 'Private') -Filter *.ps1 -ErrorAction SilentlyContinue)
+$MaxLen = ($Private+$Public).Name | % {$_.Length} | Sort-Object | Select -Last 1
 
 foreach ($F in ($Private+$Public) ) {
 
     Write-Host ("Importing $($F.Name)... ") -NoNewline
+    Write-Host $(' '*($MaxLen - $F.Name.Length)) -NoNewline
 
     try {
         . ($F.FullName)

@@ -1,4 +1,4 @@
-function New-Index {
+function New-PSRepositoryCache {
 
     # creates zipped index of all modules and scripts from PSGallery
     # priority 1: downloadable zipped index file should have size in range of megabytes (1-5MB)

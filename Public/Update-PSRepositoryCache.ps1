@@ -1,4 +1,4 @@
-function Update-Index {
+function Update-PSRepositoryCache {
 
     # updates local package cache, downloads and extracts index.zip file
     # priority 1: expected run time is couple of seconds (1-5 seconds), together with download and extract
@@ -12,7 +12,11 @@ function Update-Index {
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
 
+
+    #
     # get a index.zip file
+    #
+
     $IndexZip = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex.zip'
     if (!$LocalOnly) {
         # download file from the internet
@@ -23,14 +27,15 @@ function Update-Index {
         Write-Verbose -Message "$(Get-Date -f G) $FunctionName downloading completed"
     }
     
-    # unzip index.zip to 2 json files
+
+    #
+    # unzip index.zip
+    #
+
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName expanding archive"
     $IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
-    #if (!(Test-Path $IndexPath)) {New-Item $IndexPath -ItemType Directory | Out-Null}
     Expand-Archive $IndexZip -DestinationPath $IndexPath -Force
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName expanded total $((gci $IndexPath).Count) files"
-
-    # TODO: Add to some global variable also, maybe some switch so that we can do only this from Find-CommandInCache 
+    Write-Verbose -Message "$(Get-Date -f G) $FunctionName expanded total $((gci $IndexPath).Count) files" # TODO: This lists also old files from folder
 
 
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"

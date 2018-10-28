@@ -1,4 +1,4 @@
-function Find-CommandInCache {
+function Find-CommandFromCache {
 
     # searches local cache for information about commands
     # priority 1: it should read index file in range of 100ms (i.e. upto 100ms)
