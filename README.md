@@ -51,7 +51,7 @@ PSFolderSize              Get-Folder 1.6.3           PSGallery
 If called without any names, it will update all modules in the system. In this POC, actuall update is not implemented.
 
 Please note from verbose output that commandlet in this mode is processing about 2-3 modules per second!
-Standard commandlet `Update-Module` takes about 15 second to check for update.
+Standard commandlet `Update-Module` takes about 15 second to check for update of one module.
 
 ```PowerShell
 Update-ModuleFromCache -Verbose
@@ -72,8 +72,6 @@ VERBOSE: 10:35:43 PM  checking ThreadJob for updatable version
 VERBOSE: 10:35:43 PM  checking Azure.AnalysisServices for updatable version
 VERBOSE: Performing the operation "Update to version 0.5.4" on target "Module 'Azure.AnalysisServices' version 0.5.1".
 ```
-
-TBD
 
 ## Speed comparison
 
