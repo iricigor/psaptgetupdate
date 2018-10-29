@@ -15,6 +15,8 @@ function New-PSRepositoryCache {
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
     
+    # internal function
+    function size ($Path) {[int]( (gi $Path).Length / 1MB)} # size in MB of a given file
     
     
     #
@@ -37,15 +39,25 @@ function New-PSRepositoryCache {
     }
 
 
+    #
+    # Prepare cache location
+    #
+    
+    if (!(Test-Path $Config.TempPath)) {
+        New-Item $Config.TempPath -ItemType Directory -Force | Out-Null
+    }
+
 
     #
     # create modules index
     #
 
-    $ModulesFile = Join-Path ($env:TEMP) 'Modules.cache'
+    # $ModulesFile = Join-Path ($env:TEMP) 'Modules.cache'
+    # $ModulesFile = Join-Path $Config.TempPath $Config.ModulesCache
+    Write-Verbose -Message "$(Get-Date -f T) Packing modules to $($TP.Modules)..."
     $Lines = foreach ($M1 in $Modules) {ConvertTo-Json $M1 -Compress}
-    Set-Content -Path $ModulesFile -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Modules packed to $([int]((gi $ModulesFile).Length / 1MB))MB large file"
+    Set-Content -Path $TP.Modules -Value $Lines
+    Write-Verbose -Message "$(Get-Date -f T) Modules packed to $(size $TP.Modules)MB large file"
 
 
 
@@ -53,10 +65,10 @@ function New-PSRepositoryCache {
     # create scripts index
     #
 
-    $ScriptsFile = Join-Path ($env:TEMP) 'Scripts.cache'
+    Write-Verbose -Message "$(Get-Date -f T) Packing scripts to $($TP.Scripts)..."
     $Lines = foreach ($S1 in $Scripts) {ConvertTo-Json $S1 -Compress}
-    Set-Content -Path $ScriptsFile -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Scripts packed to $([int]((gi $ScriptsFile).Length / 1MB))MB large file"
+    Set-Content -Path $TP.Scripts -Value $Lines
+    Write-Verbose -Message "$(Get-Date -f T) Scripts packed to $(size $TP.Scripts)MB large file"
 
 
 
@@ -64,22 +76,19 @@ function New-PSRepositoryCache {
     # create commands index
     #
 
-    Write-Verbose -Message "$(Get-Date -f T) creating commands index"
-    $CommandsFile = Join-Path ($env:TEMP) 'Commands.cache'
-    $Lines = foreach ($M1 in $Modules) {($M1.Includes.Command -split ' ') -replace '$'," $($M1.Name) $($M1.Version)"}
-    Set-Content -Path $CommandsFile -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Commands packed to $([int]((gi $CommandsFile).Length / 1MB))MB large file"
-    # TODO: Add module version also
-
+    Write-Verbose -Message "$(Get-Date -f T) Packing commands to $($TP.Commands)..."
+    $Lines = foreach ($M1 in $Modules) {($M1.Includes.Command -split ' ') -replace '$'," $($M1.Name) $($M1.Version)"} # line format: Command Module Version
+    Set-Content -Path $TP.Commands -Value $Lines
+    Write-Verbose -Message "$(Get-Date -f T) Commands packed to $(size $TP.Commands)MB large file"
+    
 
     #
     # pack all files
     #
 
-    $DestinationFile = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex.zip'
     # TODO: We can check if there are command line zip available, i.e. gcm *zip*
-    Compress-Archive -Path $ModulesFile,$ScriptsFile,$CommandsFile -DestinationPath $DestinationFile -CompressionLevel Optimal -Force
-    Write-Verbose -Message "$(Get-Date -f T) Index packed to $([int]((gi $DestinationFile).Length / 1MB))MB large file"
+    Compress-Archive -Path $TP.Modules,$TP.Scripts,$TP.Commands -DestinationPath $TP.Index -CompressionLevel Optimal -Force
+    Write-Verbose -Message "$(Get-Date -f T) Index packed to $(size $TP.Index)MB large file"
 
     if (!$LocalOnly) {
         # TODO: Upload zip to storage account

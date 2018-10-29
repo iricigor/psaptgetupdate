@@ -5,20 +5,25 @@ function Find-ModuleFromCache {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)]
-        [alias('Name')]
-        [string]$ModuleName
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string[]]$ModuleName
     )
 
-    # function begin phase
-    $FunctionName = $MyInvocation.MyCommand.Name
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
+    BEGIN {
+        # function begin phase
+        $FunctionName = $MyInvocation.MyCommand.Name
+        Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
+    }
 
-    $ModulesCache = Join-Path (Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex') 'Modules.cache'
-
-    # {"Name":"AzureRM.profile",
-    $RegEx = [regex]::Escape('{"Name":"'+$ModuleName+'",')
-    Select-String -Path $ModulesCache -Pattern "^$RegEx" | % {ConvertFrom-Json ($_.Line)}
+    PROCESS {
+        foreach ($M1 in $ModuleName) {
+            # {"Name":"AzureRM.profile",
+            $RegEx = [regex]::Escape('{"Name":"'+$M1+'",')
+            Select-String -Path $IP.Modules -Pattern "^$RegEx" | % {ConvertFrom-Json ($_.Line)}
+        }
+    }
     
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+    END {
+        Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+    }    
+
 }

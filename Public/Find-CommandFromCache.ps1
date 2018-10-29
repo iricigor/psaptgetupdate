@@ -5,26 +5,30 @@ function Find-CommandFromCache {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)]
-        [alias('Name')]
-        [string]$CommandName
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string]$CommandName
     )
 
-    # function begin phase
-    $FunctionName = $MyInvocation.MyCommand.Name
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
+    BEGIN {
+        # function begin phase
+        $FunctionName = $MyInvocation.MyCommand.Name
+        Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"    
+    }
 
-    $CommandsCache = Join-Path (Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex') 'Commands.cache' # TODO: Not Linux compatible
-
-    Select-String -Path $CommandsCache -Pattern "^$CommandName" | % {
-        $obj = $_.Line -split ' '
-        New-Object PSObject -Property @{
-            Name = $CommandName
-            Version = $obj[2]
-            ModuleName = $obj[1]
-            Repository = 'PSGallery'
+    PROCESS {
+        foreach ($C1 in $CommandName) {
+            Select-String -Path $IP.Commands -Pattern "^$C1" | % {
+                $obj = $_.Line -split ' '
+                New-Object PSObject -Property @{
+                    Name = $C1
+                    Version = $obj[2]
+                    ModuleName = $obj[1]
+                    Repository = 'PSGallery'
+                }        
+            }
         }
     }
 
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+    END {
+        Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+    }    
 }

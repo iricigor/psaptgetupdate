@@ -14,17 +14,16 @@ function Update-PSRepositoryCache {
 
 
     #
-    # get a index.zip file
+    # get a index.zip file to $TP.Index
     #
 
-    $IndexZip = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex.zip'
     if (!$LocalOnly) {
         # download file from the internet
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName downloading index from the Internet"
+        Write-Verbose -Message "$(Get-Date -f T)  downloading index from the Internet"
         # https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources
         # CloudBlockBlob blob = new CloudBlockBlob(new Uri(@"https://storagesample.blob.core.windows.net/sample-container/logfile.txt"));
         # blob.DownloadToFile(@"C:\Temp\logfile.txt", System.IO.FileMode.Create);
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName downloading completed"
+        Write-Verbose -Message "$(Get-Date -f T)  downloading completed"
     }
     
 
@@ -32,10 +31,10 @@ function Update-PSRepositoryCache {
     # unzip index.zip
     #
 
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName expanding archive"
-    $IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
-    Expand-Archive $IndexZip -DestinationPath $IndexPath -Force
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName expanded total $((gci $IndexPath).Count) files" # TODO: This lists also old files from folder
+    Write-Verbose -Message "$(Get-Date -f T)  expanding archive to $($Config.IndexPath)"
+    # $IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
+    Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
+    Write-Verbose -Message "$(Get-Date -f T)  expanded total $((gci $Config.IndexPath).Count) files" # TODO: This lists also old files from folder
 
 
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
