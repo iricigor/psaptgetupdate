@@ -48,8 +48,29 @@ PSFolderSize              Get-Folder 1.6.3           PSGallery
 
 ### Update all modules
 
+If called without any names, it will update all modules in the system. In this POC, actuall update is not implemented.
+
+Please note from verbose output that commandlet in this mode is processing about 2-3 modules per second!
+Standard commandlet `Update-Module` takes about 15 second to check for update.
+
 ```PowerShell
-Update-ModuleFromCache * -WhatIf
+Update-ModuleFromCache -Verbose
+```
+
+```text
+VERBOSE: 29-Oct-18 10:35:26 PM Update-ModuleFromCache starting
+VERBOSE: 10:35:26 PM  reading list of all modules from system
+VERBOSE: 10:35:40 PM  checking EasyAzureFunction for updatable version
+VERBOSE: Performing the operation "Update to version 0.7.1" on target "Module 'EasyAzureFunction' version 0.6".
+VERBOSE: 10:35:40 PM  checking fifa2018 for updatable version
+VERBOSE: 10:35:41 PM  checking Pester for updatable version
+VERBOSE: 10:35:41 PM  checking Posh-SSH for updatable version
+VERBOSE: 10:35:42 PM  checking PSCodeHealth for updatable version
+VERBOSE: 10:35:42 PM  checking PSScriptAnalyzer for updatable version
+VERBOSE: Performing the operation "Update to version 1.17.1" on target "Module 'PSScriptAnalyzer' version 1.17.0".
+VERBOSE: 10:35:43 PM  checking ThreadJob for updatable version
+VERBOSE: 10:35:43 PM  checking Azure.AnalysisServices for updatable version
+VERBOSE: Performing the operation "Update to version 0.5.4" on target "Module 'Azure.AnalysisServices' version 0.5.1".
 ```
 
 TBD

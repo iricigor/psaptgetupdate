@@ -17,7 +17,7 @@ function Update-ModuleFromCache {
     PROCESS {
         if (!$ModuleName) {
             Write-Verbose -Message "$(Get-Date -f T)  reading list of all modules from system"
-            $AllModules = Get-Module -ListAvailable
+            $AllModules = Get-Module -ListAvailable -Verbose:$false
             $ModuleName = $AllModules.Name | Select -Unique
         }
         foreach ($M1 in $ModuleName) {
@@ -40,9 +40,11 @@ function Update-ModuleFromCache {
                 if ($ModuleOnline.Version -gt $LocalModule.Version) {
                     $Target = "Module '$M1' version $($LocalModule.Version)"
                     $Action = "Update to version $($ModuleOnline.Version)"
-                    Write-Verbose -Message "$(Get-Date -f T)  Performing action $Action on target $Target"
+                    
                     if ($PSCmdlet.ShouldProcess($Target,$Action)) {
                         # Update not implemented in POC, run with -WhatIf or -Verbose switch
+                    } else {
+                        Write-Verbose -Message "$(Get-Date -f T)  Skipped performing action $Action on target $Target"
                     }
                 }
             }
