@@ -5,7 +5,7 @@ function Update-PSRepositoryCache {
 
     [CmdletBinding()]
     param (
-        [switch]$LocalOnly = $true # for testing only we use this default
+        [switch]$LocalOnly # if used, index file must be generated with New-PSRepositoryCache
     )
     
     # function begin phase
@@ -20,10 +20,11 @@ function Update-PSRepositoryCache {
     if (!$LocalOnly) {
         # download file from the internet
         Write-Verbose -Message "$(Get-Date -f T)  downloading index from the Internet"
-        # https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources
-        # CloudBlockBlob blob = new CloudBlockBlob(new Uri(@"https://storagesample.blob.core.windows.net/sample-container/logfile.txt"));
-        # blob.DownloadToFile(@"C:\Temp\logfile.txt", System.IO.FileMode.Create);
-        Write-Verbose -Message "$(Get-Date -f T)  downloading completed"
+        # temporary remove ProgressBar, https://stackoverflow.com/questions/28682642/powershell-why-is-using-invoke-webrequest-much-slower-than-a-browser-download
+        $OldProgressPreference = $ProgressPreference; $ProgressPreference = 'SilentlyContinue' 
+        Invoke-WebRequest -Uri 'https://psgallery.blob.core.windows.net/index/PSGalleryIndex.zip' -Verbose:$false -OutFile $TP.Index | Out-Null
+        $ProgressPreference = $OldProgressPreference
+        Write-Verbose -Message "$(Get-Date -f T)  downloading completed, index file $(size $TP.Index)MB large"
     }
     
 
@@ -32,10 +33,9 @@ function Update-PSRepositoryCache {
     #
 
     Write-Verbose -Message "$(Get-Date -f T)  expanding archive to $($Config.IndexPath)"
-    # $IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
     Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
     Write-Verbose -Message "$(Get-Date -f T)  expanded total $((gci $Config.IndexPath).Count) files" # TODO: This lists also old files from folder
 
-
+    # the end
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
 }

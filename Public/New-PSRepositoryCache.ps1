@@ -8,15 +8,15 @@ function New-PSRepositoryCache {
     [CmdletBinding()]
     param (
         [switch]$LocalOnly,
-        [switch]$ReadLocal = $true # for testing, we use this flag
+        [switch]$ReadLocal = $true,  # for testing, we use this flag
+        
+        [string]$StorageAccount = 'psgallery',
+        [string]$StorageKey
     )
  
     # function begin phase
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
-    
-    # internal function
-    function size ($Path) {[int]( (gi $Path).Length / 1MB)} # size in MB of a given file
     
     
     #
@@ -91,7 +91,19 @@ function New-PSRepositoryCache {
     Write-Verbose -Message "$(Get-Date -f T) Index packed to $(size $TP.Index)MB large file"
 
     if (!$LocalOnly) {
-        # TODO: Upload zip to storage account
+        $KeyFile = Join-Path (Join-Path $PSScriptRoot '..') 'StorageKey'
+        if ((!$StorageKey) -and (!(Test-Path $KeyFile))) {
+            Write-Verbose -Message "$(Get-Date -f T)  No storage key found"
+        } else {
+            # Upload zip to storage account
+            if (!$StorageKey) {$StorageKey = Get-Content $KeyFile}
+            $StorageContext = New-AzureStorageContext -StorageAccountName $StorageAccount -StorageAccountKey $StorageKey -Protocol HTTPS
+            if (!(Get-AzureStorageContainer -Context $StorageContext -Container 'index' -ea 0)) {
+                New-AzureStorageContainer -Context $StorageContext -Container 'index' -PublicAccess Container | Out-Null
+            }
+            Set-AzureStorageBlobContent -Context $StorageContext -Container 'index' -File $TP.Index -Force -Verbose:$false | Out-Null
+        }
+        
     }
 
     # TODO: Clean-up temporary files

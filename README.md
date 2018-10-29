@@ -12,8 +12,8 @@ This module provides following commands:
 
 ### Cache Management
 
-- `Update-PSRepositoryCache` - Downloads index file and expands it to local cache, equivalent to `apt-get update`
-- `New-PSRepositoryCache` - Generates zipped index file and uploads it to storage account. This is running as a scheduled task on dedicated server. It can be also executed locally.
+- `Update-PSRepositoryCache` - Downloads index file and expands it to local cache, equivalent to `apt-get update` Linux command.
+- `New-PSRepositoryCache` - Generates zipped index file and uploads it to storage account. This is running as a scheduled task on dedicated server. Standard users do not need to run it.
 
 ### Search and Update Operations
 
