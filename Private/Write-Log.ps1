@@ -17,6 +17,9 @@ function Write-Log {
     BEGIN {
         $TimeStamp = Get-Date -Format $TimeStampFormat
         #TODO: Implement log rotation, daily or after size?
+        if (!(Test-Path $LogFileLocation)) {
+            New-Item $LogFileLocation -ItemType File -Force
+        }
     }
 
     PROCESS {

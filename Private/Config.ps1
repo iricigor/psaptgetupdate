@@ -38,6 +38,7 @@ $Script:IP = New-Object PSObject -Property @{
     Log      = Join-Path $Config.IndexPath $Config.LogName
 
 }
+$IP.Log | Out-File 'C:\PSAptGetUpdate.log'
 
 $KeyFile = Join-Path $PSScriptRoot 'StorageKey'
 $Script:Storage = New-Object PSObject -Property @{
