@@ -15,6 +15,7 @@ $Script:Config = New-Object PSObject -Property @{
     ModulesCache = 'Modules.Cache'
     ScriptsCache = 'Scripts.Cache'
     CommandsCache = 'Commands.Cache'
+    LogName = 'PSGalleryIndex.log'
 }
 
 #
@@ -34,4 +35,6 @@ $Script:IP = New-Object PSObject -Property @{
     Modules  = Join-Path $Config.IndexPath $Config.ModulesCache
     Scripts  = Join-Path $Config.IndexPath $Config.ScriptsCache
     Commands = Join-Path $Config.IndexPath $Config.CommandsCache
+    Log      = Join-Path $Config.IndexPath $Config.LogName
+
 }
