@@ -8,7 +8,7 @@ function New-PSRepositoryCache {
     [CmdletBinding()]
 
     param (
-
+        [switch]$SkipUpload
     )
  
     # function begin phase
@@ -73,7 +73,9 @@ function New-PSRepositoryCache {
     # upload new index
     #
 
-    if ($Storage.Key) {
+    if ($SkipUpload) {
+        Write-Log -Message "Skipping upload due to switch"
+    } elseif ($Storage.Key) {
         # Upload zip to storage account
         Write-Log -Message "Connecting to cloud storage"
         $StorageContext = New-AzureStorageContext -StorageAccountName $Storage.Account -StorageAccountKey $Storage.Key -Protocol HTTPS

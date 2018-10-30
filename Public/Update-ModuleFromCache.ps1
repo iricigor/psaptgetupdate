@@ -12,11 +12,13 @@ function Update-ModuleFromCache {
         # function begin phase
         $FunctionName = $MyInvocation.MyCommand.Name
         Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
+        $SearchAll = $false
     }
 
     PROCESS {
         if (!$ModuleName) {
             Write-Log -Message "Reading list of all modules from the system"
+            $SearchAll = $true
             $AllModules = Get-Module -ListAvailable -Verbose:$false
             $ModuleName = $AllModules.Name | Select -Unique
         }
@@ -39,9 +41,9 @@ function Update-ModuleFromCache {
                     Write-Log -Verbosity Error -Message "$FunctionName cannot find module $M1 in local module directories"
                     continue
                 }
-                if ($ModuleOnline.Version -gt $LocalModule.Version) {
+                if ([version]($ModuleOnline.AdditionalMetadata.NormalizedVersion) -gt $LocalModule.Version) {
                     $Target = "Module '$M1' version $($LocalModule.Version)"
-                    $Action = "Update to version $($ModuleOnline.Version)"
+                    $Action = "Update to version $($ModuleOnline.AdditionalMetadata.NormalizedVersion)" # it can be in wierd format, see bug #9
                     Write-Log -Message "Performing action $Action on target $Target"
                     if ($PSCmdlet.ShouldProcess($Target,$Action)) {
                         # Update not implemented in POC, run with -WhatIf or -Verbose switch
@@ -50,7 +52,7 @@ function Update-ModuleFromCache {
                     }
                 }
             }
-            if (!$FoundOnline) {
+            if ((!$FoundOnline) -and (!$SearchAll)) {
                 Write-Log -Message "Module '$M1' not found in Repository" -Verbosity Error
             }
         }
