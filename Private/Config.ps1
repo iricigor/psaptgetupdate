@@ -8,9 +8,9 @@ $Script:Config = New-Object PSObject -Property @{
     IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
     TempPath  = Join-Path ($env:TEMP)         'PSGalleryIndex'
 
-    # Index file name
+    # General names
     IndexFile = 'PSGalleryIndex.zip'
-
+    
     # Config file names
     ModulesCache = 'Modules.Cache'
     ScriptsCache = 'Scripts.Cache'
@@ -38,3 +38,13 @@ $Script:IP = New-Object PSObject -Property @{
     Log      = Join-Path $Config.IndexPath $Config.LogName
 
 }
+
+$KeyFile = Join-Path $PSScriptRoot 'StorageKey'
+$Script:Storage = New-Object PSObject -Property @{
+    
+    # Storage access
+    Account = 'psgallery'
+    Key = if (Test-Path $KeyFile) {Get-Content $KeyFile} else {$null}
+}
+
+

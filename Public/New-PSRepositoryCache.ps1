@@ -6,69 +6,47 @@ function New-PSRepositoryCache {
     # on home computer, downloading modules and scripts takes 6 minutes
 
     [CmdletBinding()]
+
     param (
-        [switch]$LocalOnly,
-        [switch]$ReadLocal = $true,  # for testing, we use this flag
-        
-        [string]$StorageAccount = 'psgallery',
-        [string]$StorageKey
+
     )
  
     # function begin phase
     $FunctionName = $MyInvocation.MyCommand.Name
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
-    
+    Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
+
     
     #
     # load data from PowerShell Gallery
     #
 
-    if ($ReadLocal) {
-        Write-Verbose -Message "$(Get-Date -f T) Reading data from local copy"
-        $DataPath = Join-Path (Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex') '0'
-        $Modules = Get-Content (Join-Path $DataPath 'Modules.json') -Raw | ConvertFrom-Json
-        Write-Verbose -Message "$(Get-Date -f T) Found $($Modules.Count) modules"
-        $Scripts = Get-Content (Join-Path $DataPath 'Scripts.json') -Raw | ConvertFrom-Json
-        Write-Verbose -Message "$(Get-Date -f T) Found $($Scripts.Count) modules"
-    } else {
-        Write-Verbose -Message "$(Get-Date -f T) Starting to read data from PSGallery"
-        $Modules = Find-Module * -Repository PSGallery
-        Write-Verbose -Message "$(Get-Date -f T) Found $($Modules.Count) modules"
-        $Scripts = Find-Script * -Repository PSGallery
-        Write-Verbose -Message "$(Get-Date -f T) Found $($Scripts.Count) modules"
-    }
+    Write-Log -Message "Starting to read data from PSGallery"
+    $Modules = Find-Module * -Repository PSGallery
+    Write-Log -Message "Found $($Modules.Count) modules"
+    $Scripts = Find-Script * -Repository PSGallery
+    Write-Log -Message "Found $($Scripts.Count) scripts"
 
 
-    #
-    # Prepare cache location
-    #
-    
-    if (!(Test-Path $Config.TempPath)) {
-        New-Item $Config.TempPath -ItemType Directory -Force | Out-Null
-    }
-
+    CreateTempFolder
 
     #
     # create modules index
     #
 
-    # $ModulesFile = Join-Path ($env:TEMP) 'Modules.cache'
-    # $ModulesFile = Join-Path $Config.TempPath $Config.ModulesCache
-    Write-Verbose -Message "$(Get-Date -f T) Packing modules to $($TP.Modules)..."
+    Write-Log -Message "Packing modules to $($TP.Modules)..."
     $Lines = foreach ($M1 in $Modules) {ConvertTo-Json $M1 -Compress}
     Set-Content -Path $TP.Modules -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Modules packed to $(size $TP.Modules)MB large file"
-
+    Write-Log -Message "Modules packed to $(size $TP.Modules)MB large file"
 
 
     #
     # create scripts index
     #
 
-    Write-Verbose -Message "$(Get-Date -f T) Packing scripts to $($TP.Scripts)..."
+    Write-Log -Message "Packing scripts to $($TP.Scripts)..."
     $Lines = foreach ($S1 in $Scripts) {ConvertTo-Json $S1 -Compress}
     Set-Content -Path $TP.Scripts -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Scripts packed to $(size $TP.Scripts)MB large file"
+    Write-Log -Message "Scripts packed to $(size $TP.Scripts)MB large file"
 
 
 
@@ -76,37 +54,41 @@ function New-PSRepositoryCache {
     # create commands index
     #
 
-    Write-Verbose -Message "$(Get-Date -f T) Packing commands to $($TP.Commands)..."
-    $Lines = foreach ($M1 in $Modules) {($M1.Includes.Command -split ' ') -replace '$'," $($M1.Name) $($M1.Version)"} # line format: Command Module Version
+    Write-Log -Message "Packing commands to $($TP.Commands)..."
+    $Lines = foreach ($M1 in $Modules) {($M1.Includes.Command -split ' ') -replace '$'," $($M1.Name) $($M1.Version)"}
+    # generated lines are in following format: Command Module Version
     Set-Content -Path $TP.Commands -Value $Lines
-    Write-Verbose -Message "$(Get-Date -f T) Commands packed to $(size $TP.Commands)MB large file"
+    Write-Log -Message "Commands packed to $(size $TP.Commands)MB large file"
     
 
     #
     # pack all files
     #
 
-    # TODO: We can check if there are command line zip available, i.e. gcm *zip*
     Compress-Archive -Path $TP.Modules,$TP.Scripts,$TP.Commands -DestinationPath $TP.Index -CompressionLevel Optimal -Force
-    Write-Verbose -Message "$(Get-Date -f T) Index packed to $(size $TP.Index)MB large file"
+    Write-Log -Message "Index packed to $(size $TP.Index)MB large file"
 
-    if (!$LocalOnly) {
-        $KeyFile = Join-Path (Join-Path $PSScriptRoot '..') 'StorageKey'
-        if ((!$StorageKey) -and (!(Test-Path $KeyFile))) {
-            Write-Verbose -Message "$(Get-Date -f T)  No storage key found"
-        } else {
-            # Upload zip to storage account
-            if (!$StorageKey) {$StorageKey = Get-Content $KeyFile}
-            $StorageContext = New-AzureStorageContext -StorageAccountName $StorageAccount -StorageAccountKey $StorageKey -Protocol HTTPS
-            if (!(Get-AzureStorageContainer -Context $StorageContext -Container 'index' -ea 0)) {
-                New-AzureStorageContainer -Context $StorageContext -Container 'index' -PublicAccess Container | Out-Null
-            }
-            Set-AzureStorageBlobContent -Context $StorageContext -Container 'index' -File $TP.Index -Force -Verbose:$false | Out-Null
+
+    #
+    # upload new index
+    #
+
+    if ($Storage.Key) {
+        # Upload zip to storage account
+        Write-Log -Message "Connecting to cloud storage"
+        $StorageContext = New-AzureStorageContext -StorageAccountName $Storage.Account -StorageAccountKey $Storage.Key -Protocol HTTPS
+        if (!(Get-AzureStorageContainer -Context $StorageContext -Container 'index' -ea 0)) {
+            Write-Log -Verbosity Warning "Creating new storage container 'index'"
+            New-AzureStorageContainer -Context $StorageContext -Container 'index' -PublicAccess Container | Out-Null
         }
-        
+        Write-Log -Message "Uploading index to cloud storage"
+        Set-AzureStorageBlobContent -Context $StorageContext -Container 'index' -File $TP.Index -Force -Verbose:$false | Out-Null
+        Write-Log -Message "New index uploaded to cloud storage"
+    } else {
+        Write-Log -Message "No Storage Key present, skipping upload to cloud storage"
     }
+       
 
-    # TODO: Clean-up temporary files
-
-    Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+    RemoveTempFolder
+    Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
 }

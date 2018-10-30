@@ -4,7 +4,7 @@ function Write-Log {
         [Parameter(Mandatory=$true,ValueFromPipeline=$true,Position=0)]
         [string[]]$Message,
         
-        [ValidateSet('Info','Verbose','Debug','Error')]
+        [ValidateSet('Info','Verbose','Warning','Debug','Error')]
         [string]$Verbosity = 'Verbose',
         
         [string]$TimeStampFormat = 'T',
@@ -26,6 +26,7 @@ function Write-Log {
             $M = "$TimeStamp $M1"
             switch ($Verbosity) {
                 'Verbose' {Write-Verbose $M}
+                'Warning' {Write-Warning $M}
                 'Debug'   {Write-Debug $M}
                 'Error'   {Write-Error $M}
             }
