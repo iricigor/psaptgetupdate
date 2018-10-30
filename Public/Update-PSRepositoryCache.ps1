@@ -22,9 +22,10 @@ function Update-PSRepositoryCache {
     $OldProgressPreference = $ProgressPreference
     $ProgressPreference = 'SilentlyContinue'
     CreateTempFolder
-    Invoke-WebRequest -Uri 'https://psgallery.blob.core.windows.net/index/PSGalleryIndex.zip' -Verbose:$false -OutFile $TP.Index | Out-Null
+    $Response = Invoke-WebRequest -Uri 'https://psgallery.blob.core.windows.net/index/PSGalleryIndex.zip' -Verbose:$false -OutFile $TP.Index -PassThru
     $ProgressPreference = $OldProgressPreference
-    Write-Log -Message "Downloading completed, index file $(size $TP.Index)MB large"
+    [int]$Age = ((Get-Date)-[datetime]($Response.Headers.'Last-Modified')).TotalMinutes
+    Write-Log -Message "Downloading completed, index file is $(size $TP.Index)MB large and $Age minutes old"
     
 
     #
@@ -33,9 +34,11 @@ function Update-PSRepositoryCache {
 
     Write-Log -Message "Expanding archive to $($Config.IndexPath)"
     Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
-    Write-Log -Message "expanded total $((gci $Config.IndexPath).Count) files" # TODO: This lists also old files from folder
+    Write-Log -Message "expanded total $((gci $Config.IndexPath).Count) files" # FIXME: This lists also old files from folder
 
     # the end
     RemoveTempFolder
     Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
 }
+
+Set-Alias -Name 'psaptgetupdate' -Value Update-PSRepositoryCache

@@ -18,7 +18,7 @@ function Write-Log {
         $TimeStamp = Get-Date -Format $TimeStampFormat
         #TODO: Implement log rotation, daily or after size?
         if (!(Test-Path $LogFileLocation)) {
-            New-Item $LogFileLocation -ItemType File -Force
+            New-Item $LogFileLocation -ItemType File -Force | Out-Null
         }
     }
 
@@ -36,7 +36,7 @@ function Write-Log {
 
             # log file output
             if ($LogFileLocation) {
-                "$TimeStamp $($Verbosity.ToUpper()) $Message" | Out-File -LiteralPath $LogFileLocation -Encoding utf8 -Append -Force
+                "$TimeStamp $($Verbosity.ToUpper()) $Message" | Out-File -LiteralPath $LogFileLocation -Encoding utf8 -Append -Force -WhatIf:$false
             }            
         }
     }

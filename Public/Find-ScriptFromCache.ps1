@@ -11,19 +11,22 @@ function Find-ScriptFromCache {
     BEGIN {
         # function begin phase
         $FunctionName = $MyInvocation.MyCommand.Name
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
+        Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
     }
 
     PROCESS {
         foreach ($S1 in $ScriptName) {
             # {"Name":"Get-WindowsAutoPilotInfo",
             $RegEx = [regex]::Escape('{"Name":"'+$S1+'",')
-            Select-String -Path $IP.Scripts -Pattern "^$RegEx" | % {ConvertFrom-Json ($_.Line)}
+            Select-String -Path $IP.Scripts -Pattern "^$RegEx" | % {
+                Write-Log -Message "Returning value for $S1" -Verbosity Info
+                ConvertFrom-Json ($_.Line)
+            }
         }
     }
         
     END {
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+        Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
     }
     
 }

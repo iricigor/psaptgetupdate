@@ -11,48 +11,53 @@ function Update-ModuleFromCache {
     BEGIN {
         # function begin phase
         $FunctionName = $MyInvocation.MyCommand.Name
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
+        Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
     }
 
     PROCESS {
         if (!$ModuleName) {
-            Write-Verbose -Message "$(Get-Date -f T)  reading list of all modules from system"
+            Write-Log -Message "Reading list of all modules from the system"
             $AllModules = Get-Module -ListAvailable -Verbose:$false
             $ModuleName = $AllModules.Name | Select -Unique
         }
         foreach ($M1 in $ModuleName) {
             # {"Name":"AzureRM.profile",
             $RegEx = [regex]::Escape('{"Name":"'+$M1+'",')
+            $FoundOnline = $false
             Select-String -Path $IP.Modules -Pattern "^$RegEx" | % {
-                Write-Verbose -Message "$(Get-Date -f T)  checking $M1 for updatable version"
+                Write-Log -Message "checking module $M1 for updatable version"
+                $FoundOnline = $true
                 $ModuleOnline = ConvertFrom-Json ($_.Line)
                 if ($AllModules) {
                     $LocalModule = $AllModules | ? Name -eq $M1 | Sort Version | Select -Last 1
                 } else {
-                    Write-Verbose -Message "$(Get-Date -f T)  searching for local module"
+                    Write-Log -Message "searching for local module $M1"
                     $LocalModule = Get-Module $M1 -List -ea 0 -Verbose:$false | Sort Version | Select -Last 1
                 }
                 
                 if (!$LocalModule) {
-                    Write-Error "$FunctionName cannot find module $M1 in local module directories"
+                    Write-Log -Verbosity Error -Message "$FunctionName cannot find module $M1 in local module directories"
                     continue
                 }
                 if ($ModuleOnline.Version -gt $LocalModule.Version) {
                     $Target = "Module '$M1' version $($LocalModule.Version)"
                     $Action = "Update to version $($ModuleOnline.Version)"
-                    
+                    Write-Log -Message "Performing action $Action on target $Target"
                     if ($PSCmdlet.ShouldProcess($Target,$Action)) {
                         # Update not implemented in POC, run with -WhatIf or -Verbose switch
                     } else {
-                        Write-Verbose -Message "$(Get-Date -f T)  Skipped performing action $Action on target $Target"
+                        Write-Log -Message "Skipped performing action $Action on target $Target"
                     }
                 }
+            }
+            if (!$FoundOnline) {
+                Write-Log -Message "Module '$M1' not found in Repository" -Verbosity Error
             }
         }
     }
     
     END {
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+        Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
     }    
 
 }

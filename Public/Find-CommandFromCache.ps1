@@ -11,12 +11,13 @@ function Find-CommandFromCache {
     BEGIN {
         # function begin phase
         $FunctionName = $MyInvocation.MyCommand.Name
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"    
+        Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
     }
 
     PROCESS {
         foreach ($C1 in $CommandName) {
             Select-String -Path $IP.Commands -Pattern "^$C1" | % {
+                Write-Log -Message "Returning value for $C1" -Verbosity Info
                 $obj = $_.Line -split ' '
                 New-Object PSObject -Property @{
                     Name = $C1
@@ -29,6 +30,6 @@ function Find-CommandFromCache {
     }
 
     END {
-        Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
+        Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
     }    
 }

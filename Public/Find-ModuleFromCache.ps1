@@ -9,10 +9,8 @@ function Find-ModuleFromCache {
     )
 
     BEGIN {
-        # function begin phase
         $FunctionName = $MyInvocation.MyCommand.Name
-        #Write-Verbose -Message "$(Get-Date -f G) $FunctionName starting"
-        wLog -Message "$FunctionName starting" -TimeStampFormat 'G'
+        Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
     }
 
     PROCESS {
@@ -20,15 +18,14 @@ function Find-ModuleFromCache {
             # {"Name":"AzureRM.profile",
             $RegEx = [regex]::Escape('{"Name":"'+$M1+'",')
             Select-String -Path $IP.Modules -Pattern "^$RegEx" | % {
-                wLog -m "  returning info about module $M1" -v Info
+                Write-Log -Message "returning info about module $M1" -Verbosity Info
                 ConvertFrom-Json ($_.Line)
             }
         }
     }
     
     END {
-        #Write-Verbose -Message "$(Get-Date -f G) $FunctionName completed"
-        wLog -Message "$FunctionName completed" -TimeStampFormat 'G'
+        Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
     }    
 
 }
