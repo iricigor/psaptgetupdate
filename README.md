@@ -138,6 +138,12 @@ TotalSeconds
    0.8705567  # Update-ModuleFromCache is about 16 times faster
 ```
 
+## Error handling
+
+Module is also updating default `CommandNotFoundAction` error handler. As it is running fast, if it can, it will tell you how to add requested command! Just like in some Linux distros.
+
+![Error Handling](Images/ErrorHandling.png)
+
 ## External Links
 
 - **`apt-get update`** - [man page](https://linux.die.net/man/8/apt-get), [askubuntu.com](https://askubuntu.com/questions/222348/what-does-sudo-apt-get-update-do)
