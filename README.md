@@ -1,10 +1,52 @@
 # PowerShell's apt-get update
 
-This module provides functionality for PowerShellGet inspired by `apt-get update` Linux command. This is only proof-of-concept work.
+This module provides functionality for PowerShellGet inspired by `apt-get update` Linux command. This is only proof-of-concept work, though it is (almost) fully functional. 
 
 ## Explanation
 
-TBD
+Currently PowerShell and PowerShellGet are having following two issues\feature requests which are related to each other:
+
+- Finding information about modules and scripts is very slow. It is running over the Internet and last about two seconds. This implementation speeds search commands 100 times, downto 20 ms!
+- When user types command which they do not have installed on the system, we can instruct them how to install it in some cases.
+
+Core of the module is local index (cache) of all modules, scripts and commands which is just simply downloaded from the repository.
+Generated index file is prepared (generated and zipped) on a dedicated cloud VM, but command for that is also included in the module.
+For verification, it can be also executed locally.
+
+It would be good to implement this functionality in PowerShellGet and PowerShell Gallery directly.
+
+For more details, see (illustrated) [design page](Design.md).
+
+## Speed comparison
+
+Actual speed will depend on your local system, namely of a disk and processor speed.
+Results below are from medium class personal computer.
+On low end machines, results will not be more than 2-3 times slower, which is still 20-50 times faster than already existing commands.
+
+If further speed improvement is needed, simple indexing can increase speed a few times.
+
+### Results for 10 repetitions (in seconds)
+
+  | Find-Command | Find-Script | Find-Module
+-- | -- | -- | --
+old commands | 22.9751159 | 23.0243 | 23.4820757
+new commands | 0.2507481 | 0.188659 | 0.1713624
+
+### How testing was done
+
+Testing was done executing commands similar to the ones below.
+
+```PowerShell
+Measure-Command {1..10 | % {Find-Command 'Read-Credential' -Repository 'PSGallery'}} | Select TotalSeconds
+Measure-Command {1..10 | % {Find-CommandFromCache 'Read-Credential'}} | Select TotalSeconds
+```
+Test was repeated 5 times and middle result was recorded.
+
+## Error handling
+
+Module is also updating default `CommandNotFoundAction` error handler. As it is running fast, if it can, it will tell you how to add requested command! Just like in some Linux distros.
+
+![Error Handling](Images/ErrorHandling.png)
 
 ## Commands
 
@@ -30,7 +72,8 @@ This module provides following commands:
 Update-PSRepositoryCache
 ```
 
-Creates local repository cache. Internet connection is required. Should be run first, before other examples.
+Creates local repository cache. Internet connection is required. Should be run first, before other examples. Command runs for about 4-5 seconds.
+If executed with -Verbose switch, you may actually see how old is server version of index file.
 
 ### Find-Command
 
@@ -46,11 +89,13 @@ WFTools                   Get-Folder 0.1.58          PSGallery
 PSFolderSize              Get-Folder 1.6.3           PSGallery
 ```
 
+This command runs in about 20 milliseconds, which is about 100 times faster than standard `Find-Command`.
+
 ### Update all modules
 
-If called without any names, it will update all modules in the system. In this POC, actuall update is not implemented.
+If called without any names, this command will update all modules in the system. In this POC, actual update is not implemented, so you need to run it with `-Verbose` or -`WhatIf` to see actual updatable modules.
 
-Please note from verbose output that commandlet in this mode is processing about 2-3 modules per second!
+Please note from verbose output that commandlet in this mode is processing dozens of modules per second!
 Standard commandlet `Update-Module` takes about 15 second to check for update of one module.
 
 ```PowerShell
@@ -58,91 +103,22 @@ Update-ModuleFromCache -Verbose
 ```
 
 ```text
-VERBOSE: 29-Oct-18 10:35:26 PM Update-ModuleFromCache starting
-VERBOSE: 10:35:26 PM  reading list of all modules from system
-VERBOSE: 10:35:40 PM  checking EasyAzureFunction for updatable version
+VERBOSE: 31-Oct-18 10:47:50 PM Update-ModuleFromCache starting
+VERBOSE: 10:47:50 PM Reading list of all modules from the system
+VERBOSE: 10:48:12 PM checking module ClipboardText for updatable version
+VERBOSE: 10:48:12 PM Performing action Update to version 0.1.7 on target Module 'ClipboardText' version 0.1.1
+VERBOSE: Performing the operation "Update to version 0.1.7" on target "Module 'ClipboardText' version 0.1.1".
+VERBOSE: 10:48:12 PM checking module EasyAzureFunction for updatable version
+VERBOSE: 10:48:12 PM Performing action Update to version 0.7.1 on target Module 'EasyAzureFunction' version 0.6
 VERBOSE: Performing the operation "Update to version 0.7.1" on target "Module 'EasyAzureFunction' version 0.6".
-VERBOSE: 10:35:40 PM  checking fifa2018 for updatable version
-VERBOSE: 10:35:41 PM  checking Pester for updatable version
-VERBOSE: 10:35:41 PM  checking Posh-SSH for updatable version
-VERBOSE: 10:35:42 PM  checking PSCodeHealth for updatable version
-VERBOSE: 10:35:42 PM  checking PSScriptAnalyzer for updatable version
-VERBOSE: Performing the operation "Update to version 1.17.1" on target "Module 'PSScriptAnalyzer' version 1.17.0".
-VERBOSE: 10:35:43 PM  checking ThreadJob for updatable version
-VERBOSE: 10:35:43 PM  checking Azure.AnalysisServices for updatable version
-VERBOSE: Performing the operation "Update to version 0.5.4" on target "Module 'Azure.AnalysisServices' version 0.5.1".
+VERBOSE: 10:48:12 PM checking module fifa2018 for updatable version
+VERBOSE: 10:48:12 PM Performing action Update to version 0.2.45 on target Module 'fifa2018' version 0.1.11
+VERBOSE: Performing the operation "Update to version 0.2.45" on target "Module 'fifa2018' version 0.1.11".
+VERBOSE: 10:48:12 PM checking module Plaster for updatable version
+VERBOSE: 10:48:12 PM checking module platyPS for updatable version
+VERBOSE: 10:48:12 PM Performing action Update to version 0.12.0 on target Module 'platyPS' version 0.11.1
+VERBOSE: Performing the operation "Update to version 0.12.0" on target "Module 'platyPS' version 0.11.1".
 ```
-
-## Speed comparison
-
-This is current speed comparison done from low-end computer located in Europe with 100Mbps Intenet conection.
-
-If further speed improvement is needed, simple indexing can increase speed a few times.
-
-### Find-CommandFromCache
-
-```PowerShell
-Measure-Command {1..10 | % {Find-Command 'Read-Credential' -Repository 'PSGallery'}} | Select TotalSeconds
-Measure-Command {1..10 | % {Find-CommandFromCache 'Read-Credential'}} | Select TotalSeconds
-```
-
-```text
-TotalSeconds
-------------
-  24.1530195
-   1.4833271  # Find-CommandFromCache is about 16 times faster
-```
-
-### Find-ScriptFromCache
-
-```PowerShell
-Measure-Command {1..10 | % {Find-Script 'Get-FolderAge' -Repository 'PSGallery'}} | Select TotalSeconds
-Measure-Command {1..10 | % {Find-ScriptFromCache 'Get-FolderAge'}} | Select TotalSeconds
-```
-
-```text
-TotalSeconds
-------------
-  22.0200507
-   0.6436848  # Find-ScriptFromCache is about 34 times faster
-```
-
-### Find-ModuleFromCache
-
-```PowerShell
-Measure-Command {1..10 | % {Find-Module 'FIFA2018' -Repository 'PSGallery'}} | Select TotalSeconds
-Measure-Command {1..10 | % {Find-ModuleFromCache 'FIFA2018'}} | Select TotalSeconds
-```
-
-```text
-TotalSeconds
-------------
-  21.9025661
-   4.0735746  # Find-ModuleFromCache is about 5 times faster
-```
-
-### Update-ModuleFromCache
-
-```PowerShell
-Measure-Command {Update-Module 'EasyAzureFunction' -WhatIf} | Select TotalSeconds
-Measure-Command {Update-ModuleFromCache 'EasyAzureFunction' -WhatIf} | Select TotalSeconds
-```
-
-```text
-What if: Performing the operation "Update-Module" on target "Version '0.6' of module 'EasyAzureFunction', updating to version '0.7.1'".
-What if: Performing the operation "Update to version 0.7.1" on target "Module 'EasyAzureFunction' version 0.6".
-
-TotalSeconds
-------------
-  13.8118098
-   0.8705567  # Update-ModuleFromCache is about 16 times faster
-```
-
-## Error handling
-
-Module is also updating default `CommandNotFoundAction` error handler. As it is running fast, if it can, it will tell you how to add requested command! Just like in some Linux distros.
-
-![Error Handling](Images/ErrorHandling.png)
 
 ## External Links
 
