@@ -27,7 +27,7 @@ If further speed improvement is needed, simple indexing can increase speed a few
 
 ### Results for 10 repetitions (in seconds)
 
-  | Find-Command | Find-Script | Find-Module
+ 10x executed | Find-Command | Find-Script | Find-Module
 -- | -- | -- | --
 old commands | 22.9751159 | 23.0243 | 23.4820757
 new commands | 0.2507481 | 0.188659 | 0.1713624
@@ -35,12 +35,12 @@ new commands | 0.2507481 | 0.188659 | 0.1713624
 ### How testing was done
 
 Testing was done executing commands similar to the ones below.
+Test was repeated 5 times and middle result was recorded.
 
 ```PowerShell
 Measure-Command {1..10 | % {Find-Command 'Read-Credential' -Repository 'PSGallery'}} | Select TotalSeconds
 Measure-Command {1..10 | % {Find-CommandFromCache 'Read-Credential'}} | Select TotalSeconds
 ```
-Test was repeated 5 times and middle result was recorded.
 
 ## Error handling
 
@@ -54,7 +54,7 @@ This module provides following commands:
 
 ### Cache Management
 
-- `Update-PSRepositoryCache` - Downloads index file and expands it to local cache, equivalent to `apt-get update` Linux command.
+- `Update-PSRepositoryCache` (alias PSAptGetUpdate)- Downloads index file and expands it to local cache, equivalent to `apt-get update` Linux command.
 - `New-PSRepositoryCache` - Generates zipped index file and uploads it to storage account. This is running as a scheduled task on dedicated server. Standard users do not need to run it.
 
 ### Search and Update Operations
