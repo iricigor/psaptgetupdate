@@ -26,7 +26,8 @@ function Update-ModuleFromCache {
             # {"Name":"AzureRM.profile",
             $RegEx = [regex]::Escape('{"Name":"'+$M1+'",')
             $FoundOnline = $false
-            Select-String -Path $IP.Modules -Pattern "^$RegEx" | % {
+            $IndexFile = $IP.Modules + (Hash $M1)
+            Select-String -Path $IndexFile -Pattern "^$RegEx" | % {
                 Write-Log -Message "checking module $M1 for updatable version"
                 $FoundOnline = $true
                 $ModuleOnline = ConvertFrom-Json ($_.Line)
