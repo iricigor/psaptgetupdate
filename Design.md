@@ -31,4 +31,4 @@ The implemented solution relies on two sections.
 
 ### Other ideas
 
-Server side could be ideally deployed on PS Gallery itself, and not on an VM in isolated system. Triggering of an update can be done by Gallery itself upon update, and not by scheduled task.
+Server side could be ideally deployed on PS Gallery itself, and not on an VM in isolated system. Also, triggering of an update can be done by PS Gallery database system upon update, and not by scheduled task.
