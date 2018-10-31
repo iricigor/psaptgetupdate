@@ -8,6 +8,7 @@ function New-PSRepositoryCache {
     [CmdletBinding()]
 
     param (
+        [string]$ReadFromPath,
         [switch]$Local
     )
  
@@ -20,12 +21,20 @@ function New-PSRepositoryCache {
     # load data from PowerShell Gallery
     #
 
-    Write-Log -Message "Starting to read data from PSGallery"
-    $Scripts = Find-Script * -Repository PSGallery
-    Write-Log -Message "Found $($Scripts.Count) scripts"
-    $Time0 = Get-Date
-    $Modules = Find-Module * -Repository PSGallery
-    Write-Log -Message "Found $($Modules.Count) modules, reading time $([int](((Get-Date)-$Time0).TotalSeconds)) seconds"
+    if ($ReadFromPath) {
+        Write-Log -Message "Starting to read data from local path"
+        $Scripts = Get-Content (Join-Path $ReadFromPath 'Scripts.json') | ConvertFrom-Json
+        Write-Log -Message "Found $($Scripts.Count) scripts"
+        $Modules = Get-Content (Join-Path $ReadFromPath 'Modules.json') | ConvertFrom-Json
+        Write-Log -Message "Found $($Modules.Count) modules"
+    } else {
+        Write-Log -Message "Starting to read data from PSGallery"
+        $Scripts = Find-Script * -Repository PSGallery
+        Write-Log -Message "Found $($Scripts.Count) scripts"
+        $Time0 = Get-Date
+        $Modules = Find-Module * -Repository PSGallery
+        Write-Log -Message "Found $($Modules.Count) modules, reading time $([int](((Get-Date)-$Time0).TotalSeconds)) seconds"    
+    }
 
 
     CreateTempFolder
@@ -83,7 +92,6 @@ function New-PSRepositoryCache {
     if ($Local) {
         Write-Log -Message "Creating local index cache at $($Config.IndexPath)"
         Copy-Item -Path "$($TP.Modules)*",$TP.Scripts,$TP.Commands,$TP.Index -Destination $Config.IndexPath -Force 
-        Read-Host 'Enter to continue'
     } elseif ($Storage.Key) {
         # Upload zip to storage account
         Write-Log -Message "Connecting to cloud storage"

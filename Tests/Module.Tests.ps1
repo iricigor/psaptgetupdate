@@ -50,7 +50,7 @@ Describe 'Proper Declarations' {
 Describe 'Creates new Repository Cache' -Tag 'LongRunning' {
 
     It 'Creates new Repository Cache successfully' {
-        {New-PSRepositoryCache -SkipUpload} | Should -Not -Throw  # long running!
+        {New-PSRepositoryCache -Local} | Should -Not -Throw  # long running!
     }
 
 }

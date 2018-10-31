@@ -7,6 +7,13 @@ Get-Module $ModName | Remove-Module -Force
 Write-Host "`n`n$ModName module import starting`n" -ForegroundColor Cyan
 
 #
+#
+#
+
+Import-Module PowerShellGet
+
+
+#
 # Import main functions
 #
 
