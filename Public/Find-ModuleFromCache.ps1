@@ -17,7 +17,9 @@ function Find-ModuleFromCache {
         foreach ($M1 in $ModuleName) {
             # {"Name":"AzureRM.profile",
             $RegEx = [regex]::Escape('{"Name":"'+$M1+'",')
-            Select-String -Path $IP.Modules -Pattern "^$RegEx" | % {
+            $IndexFile = $IP.Modules + (Hash $M1)
+            Write-Log -Message "finding module info in $IndexFile"
+            Select-String -Path $IndexFile -Pattern "^$RegEx" | ForEach-Object {
                 Write-Log -Message "returning info about module $M1" -Verbosity Info
                 ConvertFrom-Json ($_.Line)
             }

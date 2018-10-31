@@ -21,7 +21,7 @@ function RemoveTempFolder {
 
 function Hash ([string[]]$Name) {
     foreach ($N1 in $Name) {
-        $Sum = $N1.ToCharArray() | % {[byte]$_} | Measure-Object -Sum
+        $Sum = $N1.ToUpper().ToCharArray() | % {[byte]$_} | Measure-Object -Sum
         [char]([int]($Sum.Sum % 26)+65)
     }
 }
