@@ -19,7 +19,7 @@ function Update-ModuleFromCache {
         if (!$ModuleName) {
             Write-Log -Message "Reading list of all modules from the system"
             $SearchAll = $true
-            $AllModules = Get-Module -ListAvailable -Verbose:$false
+            $AllModules = Get-Module -ListAvailable -Verbose:$false | where {$_.RepositorySourceLocation.Host -eq 'www.powershellgallery.com'}
             $ModuleName = $AllModules.Name | Select -Unique
         }
         foreach ($M1 in $ModuleName) {

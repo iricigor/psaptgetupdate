@@ -1,6 +1,7 @@
-# size in MB of a given file
+# size in MB of a given file(s)
 function size ([string]$Path) {
-    [int]( (Get-Item $Path).Length / 1MB)
+    $Sum = Get-Item $Path | Measure-Object -Sum -Property Length
+    [int]( $Sum.Sum / 1MB)
 } 
 
 
@@ -15,5 +16,12 @@ function RemoveTempFolder {
     if (Test-Path $Config.TempPath) {
         Write-Log -Message "Removing temporary items"
         Remove-Item $Config.TempPath -Recurse -Force     
+    }
+}
+
+function Hash ([string[]]$Name) {
+    foreach ($N1 in $Name) {
+        $Sum = $N1.ToCharArray() | % {[byte]$_} | Measure-Object -Sum
+        [char]([int]($Sum.Sum % 26)+65)
     }
 }

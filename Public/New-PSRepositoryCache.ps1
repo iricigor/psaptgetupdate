@@ -8,7 +8,7 @@ function New-PSRepositoryCache {
     [CmdletBinding()]
 
     param (
-        [switch]$SkipUpload
+        [switch]$Local
     )
  
     # function begin phase
@@ -21,10 +21,11 @@ function New-PSRepositoryCache {
     #
 
     Write-Log -Message "Starting to read data from PSGallery"
-    $Modules = Find-Module * -Repository PSGallery
-    Write-Log -Message "Found $($Modules.Count) modules"
     $Scripts = Find-Script * -Repository PSGallery
     Write-Log -Message "Found $($Scripts.Count) scripts"
+    $Time0 = Get-Date
+    $Modules = Find-Module * -Repository PSGallery
+    Write-Log -Message "Found $($Modules.Count) modules, reading time $([int](((Get-Date)-$Time0).TotalSeconds)) seconds"
 
 
     CreateTempFolder
@@ -33,11 +34,17 @@ function New-PSRepositoryCache {
     # create modules index
     #
 
-    Write-Log -Message "Packing modules to $($TP.Modules)..."
-    $Lines = foreach ($M1 in $Modules) {ConvertTo-Json $M1 -Compress}
-    Set-Content -Path $TP.Modules -Value $Lines
-    Write-Log -Message "Modules packed to $(size $TP.Modules)MB large file"
-
+    Write-Log -Message "Packing modules to $($TP.Modules)* ..."
+    #$Lines = foreach ($M1 in $Modules) {ConvertTo-Json $M1 -Compress}
+    #Set-Content -Path $TP.Modules -Value $Lines
+    $Lines = @{}
+    1..26 | % {$Lines.Add([char]($_+64),@())} # hash table with keys 'A'..'Z', each element an empty array
+    foreach ($M1 in $Modules) {
+        $Key = Hash $M1.Name
+        $Lines.$Key += ,(ConvertTo-Json $M1 -Compress)
+    }
+    $Lines.Keys | % {Set-Content -Path ($TP.Modules+$_) -Value ($Lines.$_)} # writing to 26 different files
+    Write-Log -Message "Modules packed to $(size $($TP.Modules+'*'))MB large files"
 
     #
     # create scripts index
@@ -65,7 +72,7 @@ function New-PSRepositoryCache {
     # pack all files
     #
 
-    Compress-Archive -Path $TP.Modules,$TP.Scripts,$TP.Commands -DestinationPath $TP.Index -CompressionLevel Optimal -Force
+    Compress-Archive -Path "$($TP.Modules)*",$TP.Scripts,$TP.Commands -DestinationPath $TP.Index -CompressionLevel Optimal -Force
     Write-Log -Message "Index packed to $(size $TP.Index)MB large file"
 
 
@@ -73,8 +80,10 @@ function New-PSRepositoryCache {
     # upload new index
     #
 
-    if ($SkipUpload) {
-        Write-Log -Message "Skipping upload due to switch"
+    if ($Local) {
+        Write-Log -Message "Creating local index cache at $($Config.IndexPath)"
+        Copy-Item -Path "$($TP.Modules)*",$TP.Scripts,$TP.Commands,$TP.Index -Destination $Config.IndexPath -Force 
+        Read-Host 'Enter to continue'
     } elseif ($Storage.Key) {
         # Upload zip to storage account
         Write-Log -Message "Connecting to cloud storage"
