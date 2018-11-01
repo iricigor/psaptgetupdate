@@ -48,6 +48,29 @@ Module is also updating default `CommandNotFoundAction` error handler. As it is 
 
 ![Error Handling](Images/ErrorHandling.png)
 
+## How to install
+
+You can install this module in a couple of ways listed below.
+
+- **From PowerShell Gallery** _(preferred way)_:
+
+Module can be installed from [PS Gallery](https://www.powershellgallery.com/packages/psaptgetupdate) using the command 
+
+```PowerShell
+Install-Module psaptgetupdate -Scope CurrentUser
+```
+
+- **Clone repository:**
+
+If you want to see the entire GitHub repository, just clone it and import module afterwards.
+
+```PowerShell
+git clone https://github.com/iricigor/psaptgetupdate.git
+Import-Module .\psaptgetupdate.psd1 -Force
+```
+
+
+
 ## Commands
 
 This module provides following commands:
