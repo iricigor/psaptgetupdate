@@ -124,3 +124,27 @@ VERBOSE: Performing the operation "Update to version 0.12.0" on target "Module '
 
 - **`apt-get update`** - [man page](https://linux.die.net/man/8/apt-get), [askubuntu.com](https://askubuntu.com/questions/222348/what-does-sudo-apt-get-update-do)
 - **`PowerShellGet`** - [MSFT docs](https://docs.microsoft.com/en-us/powershell/module/powershellget), [GitHub repo](https://github.com/PowerShell/PowerShellGet)
+
+## Build status
+
+Each commit or PR to master is checked on [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/) [Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/).
+
+[![Build Status](https://dev.azure.com/iiric/PSAptGetUpdate/_apis/build/status/PSAptGetUpdate-CI)](https://dev.azure.com/iiric/PSAptGetUpdate/_build/latest?definitionId=8)
+
+## Support
+
+You can chat about this commandlet via [Skype](https://www.skype.com) _(no Skype ID required)_, by clicking a link below.
+
+[![chat on Skype](https://img.shields.io/badge/chat-on%20Skype-blue.svg?style=flat)](https://join.skype.com/hQMRyp7kwjd2)
+
+## Contributing
+
+If you find any problems, feel free to open a new issue.
+
+![GitHub open issues](https://img.shields.io/github/issues/iricigor/psaptgetupdate.svg?style=flat)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/iricigor/psaptgetupdate.svg?style=flat)
+
+If you want to contribute, please fork the code and make a new PR after!
+
+![GitHub](https://img.shields.io/github/license/iricigor/psaptgetupdate.svg?style=flat)
+![GitHub top language](https://img.shields.io/github/languages/top/iricigor/psaptgetupdate.svg?style=flat)
