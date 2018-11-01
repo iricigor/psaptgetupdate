@@ -4,7 +4,10 @@ param()
 $ModName = 'PSAptGetUpdate'
 Get-Module $ModName | Remove-Module -Force
 
-Write-Host "`n`n$ModName module import starting`n" -ForegroundColor Cyan
+$V = [bool]($ImportModuleWithOutput) # manually defined global variable, for personal testing only!
+
+
+if ($V) {Write-Host "`n`n$ModName module import starting`n" -ForegroundColor Cyan}
 
 #
 #
@@ -23,22 +26,25 @@ $MaxLen = ($Private+$Public).Name | ForEach-Object {$_.Length} | Sort-Object | S
 
 foreach ($F in ($Private+$Public) ) {
 
-    Write-Host ("Importing $($F.Name)... ") -NoNewline
-    Write-Host $(' '*($MaxLen - $F.Name.Length)) -NoNewline
+    if ($V) {Write-Host ("Importing $($F.Name)... ") $(' '*($MaxLen - $F.Name.Length)) -NoNewline}
 
     try {
         . ($F.FullName)
-        Write-Host '  OK  ' -ForegroundColor Green
+        if ($V) {Write-Host '  OK  ' -ForegroundColor Green}
     } catch {
-        Write-Host 'FAILED' -ForegroundColor Red
+        if ($V) {Write-Host 'FAILED' -ForegroundColor Red}
     }
 }
 
 Export-ModuleMember -Function $Public.BaseName
-Write-Host "Exported $($Public.Count) member(s)"
+if ($V) {Write-Host "Exported $($Public.Count) member(s)"}
 Export-ModuleMember -Alias *
 
 
-Write-Host "`nModule web site github.com/iricigor/aptgetupdate"
-Write-Host "`nType 'Get-Command -Module $ModName' for list of commands, 'Get-Help <CommandName>' for help, or"
-Write-Host "'Get-Command -Module $ModName | Get-Help | Select Name, Synopsis' for explanation on all commands`n"
+if ($V) {
+    Write-Host "`nModule web site github.com/iricigor/aptgetupdate"
+    Write-Host "`nType 'Get-Command -Module $ModName' for list of commands, 'Get-Help <CommandName>' for help, or"
+    Write-Host "'Get-Command -Module $ModName | Get-Help | Select Name, Synopsis' for explanation on all commands`n"
+}
+
+Update-PSRepositoryCache
