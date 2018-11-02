@@ -12,7 +12,7 @@
 RootModule = '.\PSAptGetUpdate.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.9.3'
+ModuleVersion = '0.9.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -107,7 +107,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Bug fix for command prefix'
+        ReleaseNotes = 'Bug fix for command prefix, smaller file list published; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
 
     } # End of PSData hashtable
 

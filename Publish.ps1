@@ -43,6 +43,6 @@ Get-ChildItem -Path $Destination2 -Include '.git*' -Recurse | Remove-Item -Recur
 Get-ChildItem -Path $Destination2 -Include $Exclude -Recurse | Remove-Item -Recurse -Force
 
 # publish
-Publish-Module -Path . -Repository PSGallery -NuGetApiKey $NugetKey -Verbose
+Publish-Module -Path $Destination2 -Repository PSGallery -NuGetApiKey $NugetKey -Verbose
 
 "Module $ModuleName published to PowerShell Gallery"
