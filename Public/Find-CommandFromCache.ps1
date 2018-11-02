@@ -16,7 +16,7 @@ function Find-CommandFromCache {
 
     PROCESS {
         foreach ($C1 in $CommandName) {
-            Select-String -Path $IP.Commands -Pattern "^$C1" | % {
+            Select-String -Path $IP.Commands -Pattern "^$C1 " | % {
                 Write-Log -Message "Returning value for $C1" -Verbosity Info
                 $obj = $_.Line -split ' '
                 New-Object PSObject -Property @{
