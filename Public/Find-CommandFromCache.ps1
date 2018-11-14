@@ -5,7 +5,7 @@ function Find-CommandFromCache {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string]$CommandName
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string[]]$CommandName
     )
 
     BEGIN {
