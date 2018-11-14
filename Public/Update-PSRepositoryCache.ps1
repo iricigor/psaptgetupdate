@@ -24,7 +24,11 @@ function Update-PSRepositoryCache {
     CreateTempFolder
     $Response = Invoke-WebRequest -Uri 'https://psgallery.blob.core.windows.net/index/PSGalleryIndex.zip' -Verbose:$false -OutFile $TP.Index -PassThru
     $ProgressPreference = $OldProgressPreference
-    [int]$Age = ((Get-Date)-[datetime]($Response.Headers.'Last-Modified')).TotalMinutes
+    try {
+        [int]$Age = ((Get-Date)-[datetime]($Response.Headers.'Last-Modified')).TotalMinutes
+    } catch {
+        $Age = 'unknown'
+    }
     Write-Log -Message "Downloading completed, index file is $(size $TP.Index)MB large and $Age minutes old"
     
 
