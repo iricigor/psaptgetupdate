@@ -8,7 +8,7 @@ schema: 2.0.0
 # Find-CommandFromCache
 
 ## SYNOPSIS
-Finds PowerShell commands in modules using local cache.
+Finds PowerShell commands with given name using local cache.
 
 ## SYNTAX
 
@@ -18,8 +18,8 @@ Find-CommandFromCache [-CommandName] <String[]> [<CommonParameters>]
 
 ## DESCRIPTION
 
-The Find-CommandFromCache cmdlet finds PowerShell commands such as cmdlets, aliases, functions, and workflows.
-Find-Command searches local cache obtained with command `Update-PSRepositoryCache` (or using its alias `psaptgetupdate`).
+The Find-CommandFromCache cmdlet finds PowerShell commands such as cmdlets using local cache.
+Local cache is obtained/updated with command `Update-PSRepositoryCache` (or using its alias `psaptgetupdate`).
 Searching local cache is about 20-100 times faster than online search performed via `Find-Command` command from PowerShellGet.
 
 ## EXAMPLES
@@ -44,7 +44,9 @@ This command runs in about 20 milliseconds, which is about 100 times faster than
 
 ### -CommandName
 
-Specifies an array of names of commands to search for.
+Specifies the names of one or more commands to search for.
+Only commands that exactly match the specified names are returned.
+If no matches are found, no error is returned.
 
 ```yaml
 Type: String[]
@@ -72,3 +74,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+https://github.com/iricigor/psaptgetupdate

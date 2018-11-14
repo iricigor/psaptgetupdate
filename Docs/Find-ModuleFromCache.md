@@ -8,7 +8,7 @@ schema: 2.0.0
 # Find-ModuleFromCache
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Finds PowerShell modules with given name using local cache.
 
 ## SYNTAX
 
@@ -17,21 +17,35 @@ Find-ModuleFromCache [-ModuleName] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+
+The Find-ModuleFromCache cmdlet finds PowerShell modules with given name(s) using local cache.
+Local cache is obtained/updated with command `Update-PSRepositoryCache` (or using its alias `psaptgetupdate`).
+Searching local cache is about 20-100 times faster than online search performed via `Find-Module` command from PowerShellGet.
 
 ## EXAMPLES
 
 ### Example 1
+
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Find-ModuleFromCache FIFA2018,OutlookConnector | Select Name, Description
 ```
 
-{{ Add example description here }}
+```text
+Name             Description
+----             -----------
+fifa2018         Module gives result (including live), fixtures, team standings and others for FIFA 2018 - Football ...
+OutlookConnector The module Outlook Connector will enable you to connect to MS Outlook session on your computer via ...
+```
+
+Returns information about modules from local cache. Search is not case sensitive.
 
 ## PARAMETERS
 
 ### -ModuleName
-{{Fill ModuleName Description}}
+
+Specifies the names of one or more modules to search for.
+Only modules that exactly match the specified names are returned.
+If no matches are found, no error is returned.
 
 ```yaml
 Type: String[]
@@ -55,6 +69,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### System.Object
+
 ## NOTES
 
 ## RELATED LINKS
+
+https://github.com/iricigor/psaptgetupdate

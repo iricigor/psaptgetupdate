@@ -8,7 +8,7 @@ schema: 2.0.0
 # Find-ScriptFromCache
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Finds PowerShell scripts with given name using local cache.
 
 ## SYNTAX
 
@@ -17,21 +17,32 @@ Find-ScriptFromCache [-ScriptName] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+
+The Find-ScriptFromCache cmdlet finds PowerShell scripts with given name(s) using local cache.
+Local cache is obtained/updated with command `Update-PSRepositoryCache` (or using its alias `psaptgetupdate`).
+Searching local cache is about 20-100 times faster than online search performed via `Find-Script` command from PowerShellGet.
 
 ## EXAMPLES
 
 ### Example 1
+
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Find-ScriptFromCache 'Get-FolderAge' | Select Name, Description
 ```
 
-{{ Add example description here }}
+```
+Name          Description
+----          -----------
+Get-FolderAge Get-FolderAge returns `LastModifiedDate` for a specified folder(s) and if folders were modified after ...
+```
 
 ## PARAMETERS
 
 ### -ScriptName
-{{Fill ScriptName Description}}
+
+Specifies the names of one or more scripts to search for.
+Only scripts that exactly match the specified names are returned.
+If no matches are found, no error is returned.
 
 ```yaml
 Type: String[]
@@ -55,6 +66,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### System.Object
+
 ## NOTES
 
 ## RELATED LINKS
+
+https://github.com/iricigor/psaptgetupdate
