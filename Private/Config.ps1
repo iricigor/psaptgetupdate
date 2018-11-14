@@ -2,11 +2,21 @@
 # Module definitions
 #
 
+$FolderName = 'PSGalleryIndex'
+
+if ($IsLinux -or $IsMacOS) {
+    $AppDataFolder = Join-Path $HOME  $FolderName
+    $TempFolder =    Join-Path '/tmp' $FolderName
+} else {
+    $AppDataFolder = Join-Path ($env:LOCALAPPDATA) $FolderName
+    $TempFolder =    Join-Path ($env:TEMP)         $FolderName
+}
+
 $Script:Config = New-Object PSObject -Property @{
 
     # Main Paths
-    IndexPath = Join-Path ($env:LOCALAPPDATA) 'PSGalleryIndex'
-    TempPath  = Join-Path ($env:TEMP)         'PSGalleryIndex'
+    IndexPath = $AppDataFolder
+    TempPath  = $TempFolder
 
     # General names
     IndexFile = 'PSGalleryIndex.zip'
@@ -47,5 +57,3 @@ $Script:Storage = New-Object PSObject -Property @{
     Account = 'psgallery'
     Key = if (Test-Path $KeyFile) {Get-Content $KeyFile} else {$null}
 }
-
-

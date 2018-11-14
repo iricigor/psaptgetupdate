@@ -31,7 +31,9 @@ if ($NugetKey) {
 }
     
 # copy entire folder to temp location
-$Destination = $Env:TEMP
+if ($IsLinux -or $IsMacOS) {$Destination = '/tmp'}
+else {$Destination = $Env:TEMP}
+
 $Destination2 = Join-Path $Destination $ModuleName
 Remove-Item $Destination2 -Recurse -Force
 Copy-Item -Path . -Destination $Destination -Recurse # it creates folder $ModuleName
