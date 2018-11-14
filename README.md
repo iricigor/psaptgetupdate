@@ -150,9 +150,11 @@ VERBOSE: Performing the operation "Update to version 0.12.0" on target "Module '
 
 ## Build status
 
-Each commit or PR to master is checked on [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/) [Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/).
+Each commit or PR to master is checked on [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/) [Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/) on two build systems:
 
-[![Build Status](https://dev.azure.com/iiric/PSAptGetUpdate/_apis/build/status/PSAptGetUpdate-CI)](https://dev.azure.com/iiric/PSAptGetUpdate/_build/latest?definitionId=8)
+
+1. Ubuntu **Linux** v.16.04 LTS host running PowerShell (Core) v.6.1 [![Windows Build Status](https://dev.azure.com/iiric/PSAptGetUpdate/_apis/build/status/PSAptGetUpdate-CI-Linux)](https://dev.azure.com/iiric/PSAptGetUpdate/_build/latest?definitionId=9)
+2. **Windows** host running Windows PowerShell v.5.1 [![Windows Build Status](https://dev.azure.com/iiric/PSAptGetUpdate/_apis/build/status/PSAptGetUpdate-CI-Win)](https://dev.azure.com/iiric/PSAptGetUpdate/_build/latest?definitionId=8)
 
 ## Support
 
