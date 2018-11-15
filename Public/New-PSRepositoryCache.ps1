@@ -55,6 +55,7 @@ function New-PSRepositoryCache {
     $Lines.Keys | % {Set-Content -Path ($TP.Modules+$_) -Value ($Lines.$_)} # writing to 26 different files
     Write-Log -Message "Modules packed to $(size $($TP.Modules+'*'))MB large files"
 
+    
     #
     # create scripts index
     #
