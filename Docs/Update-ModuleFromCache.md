@@ -8,7 +8,7 @@ schema: 2.0.0
 # Update-ModuleFromCache
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Checks if there is newer version of specified modules from a local cache.
 
 ## SYNTAX
 
@@ -17,18 +17,62 @@ Update-ModuleFromCache [[-ModuleName] <String[]>] [-WhatIf] [-Confirm] [<CommonP
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+
+The Update-ModuleFromCache cmdlet finds PowerShell modules with given name(s) which can be updated to newer version using local cache.
+If name is omitted, it will search for all locally installed modules.
+Local cache is obtained/updated with command `Update-PSRepositoryCache` (or using its alias `psaptgetupdate`).
+Searching local cache is about 20-100 times faster than online search performed via `Update-Module` command from PowerShellGet.
+
+As this module is just a proof-of-concept, actual update is not implemented.
+You need to run cmdlet with -Verbose or -WhatIf to see actual updatable modules.
 
 ## EXAMPLES
 
 ### Example 1
+
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Update-ModuleFromCache AzureRM -WhatIf
 ```
 
-{{ Add example description here }}
+It will check if there is newer version of AzureRM module available using local cache.
+
+### Example 2
+
+```powershell
+PS C:\> $Names = (Get-Module AzureRM.* -ListAvailable).Name | Select -unique; Update-ModuleFromCache $Names -WhatIf
+```
+
+It will check for all AzureRM modules if they can be updated or not
+While standard command Update-Module will run for minutes, this command will run for seconds.
+
+### Example 3
+
+```powershell
+PS C:\> Update-ModuleFromCache -WhatIf
+```
+
+It will check for all locally installed modules if they can be updated or not.
+While standard command Update-Module will run for minutes, this command will run for seconds.
 
 ## PARAMETERS
+
+### -ModuleName
+Specifies the names of one or more modules that should be checked for updates.
+If no module names are specified, Update-ModuleFromCache uses Get-Module -ListAvailable to obtain list of all modules.
+The only modules that are checked are those that exactly match specified names.
+If no matches are found for the specified modules or no newer version is found, no error occurs.
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases: Name
+
+Required: False
+Position: 0
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
 
 ### -Confirm
 Prompts you for confirmation before running the cmdlet.
@@ -42,21 +86,6 @@ Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ModuleName
-{{Fill ModuleName Description}}
-
-```yaml
-Type: String[]
-Parameter Sets: (All)
-Aliases: Name
-
-Required: False
-Position: 0
-Default value: None
-Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -86,6 +115,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### System.Object
+
 ## NOTES
 
 ## RELATED LINKS
+
+https://github.com/iricigor/psaptgetupdate
