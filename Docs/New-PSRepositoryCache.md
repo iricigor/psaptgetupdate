@@ -1,7 +1,7 @@
 ---
 external help file: PSAptGetUpdate-help.xml
 Module Name: PSAptGetUpdate
-online version:
+online version: https://github.com/iricigor/psaptgetupdate/blob/master/Docs/New-PSRepositoryCache.md
 schema: 2.0.0
 ---
 
