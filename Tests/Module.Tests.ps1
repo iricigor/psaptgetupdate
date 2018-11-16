@@ -133,6 +133,6 @@ Describe 'ScriptAnalyzer Tests' {
         Import-Module PSScriptAnalyzer
         # Check code
         $SA = Invoke-ScriptAnalyzer -Path $root -Recurse
-        $SA | ? Severity -eq 'Error' | Should -Be $null
+        $SA | where Severity -eq 'Error' | Should -Be $null
     }
 }
