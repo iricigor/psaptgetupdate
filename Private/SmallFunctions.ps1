@@ -2,7 +2,7 @@
 function size ([string]$Path) {
     $Sum = Get-Item $Path | Measure-Object -Sum -Property Length
     [int]( $Sum.Sum / 1MB)
-} 
+}
 
 
 function CreateTempFolder {
@@ -15,7 +15,7 @@ function CreateTempFolder {
 function RemoveTempFolder {
     if (Test-Path $Config.TempPath) {
         Write-Log -Message "Removing temporary items"
-        Remove-Item $Config.TempPath -Recurse -Force     
+        Remove-Item $Config.TempPath -Recurse -Force
     }
 }
 

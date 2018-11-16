@@ -29,7 +29,7 @@ if ($NugetKey) {
 } else {
     throw 'Please define $NugetKey variable'
 }
-    
+
 # copy entire folder to temp location
 if ($IsLinux -or $IsMacOS) {$Destination = '/tmp'}
 else {$Destination = $Env:TEMP}

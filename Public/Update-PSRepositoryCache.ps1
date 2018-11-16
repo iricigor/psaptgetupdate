@@ -7,7 +7,7 @@ function Update-PSRepositoryCache {
     param (
 
     )
-    
+
     # function begin phase
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
@@ -30,7 +30,7 @@ function Update-PSRepositoryCache {
         $Age = 'unknown'
     }
     Write-Log -Message "Downloading completed, index file is $(size $TP.Index)MB large and $Age minutes old"
-    
+
 
     #
     # unzip index.zip

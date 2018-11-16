@@ -1,14 +1,14 @@
 function Write-Log {
     param (
-        
+
         [Parameter(Mandatory=$true,ValueFromPipeline=$true,Position=0)]
         [string[]]$Message,
-        
+
         [ValidateSet('Info','Verbose','Warning','Debug','Error')]
         [string]$Verbosity = 'Verbose',
-        
+
         [string]$TimeStampFormat = 'T',
-        
+
         [string]$LogFileLocation = $IP.Log
 
         # TODO: Add ParameterSets to simplify usage
@@ -24,7 +24,7 @@ function Write-Log {
 
     PROCESS {
         foreach ($M1 in $Message) {
-            
+
             # screen output
             $M = "$TimeStamp $M1"
             switch ($Verbosity) {
@@ -37,14 +37,14 @@ function Write-Log {
             # log file output
             if ($LogFileLocation) {
                 "$TimeStamp $($Verbosity.ToUpper()) $Message" | Out-File -LiteralPath $LogFileLocation -Encoding utf8 -Append -Force -WhatIf:$false
-            }            
+            }
         }
     }
 
     END {
 
     }
-    
+
 }
 
 Set-Alias -Name wLog -Value Write-Log

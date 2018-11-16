@@ -20,7 +20,7 @@ $Script:Config = New-Object PSObject -Property @{
 
     # General names
     IndexFile = 'PSGalleryIndex.zip'
-    
+
     # Config file names
     ModulesCache = 'Modules.Cache'
     ScriptsCache = 'Scripts.Cache'
@@ -52,7 +52,7 @@ try {$IP.Log | Out-File 'C:\PSAptGetUpdate.log'} catch {} # if running under sys
 
 $KeyFile = Join-Path $PSScriptRoot 'StorageKey'
 $Script:Storage = New-Object PSObject -Property @{
-    
+
     # Storage access
     Account = 'psgallery'
     Key = if (Test-Path $KeyFile) {Get-Content $KeyFile} else {$null}

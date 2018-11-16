@@ -68,7 +68,7 @@ Describe 'Proper Functionality' {
 
         {Find-CommandFromCache 'Read-Credential'} | Should -Not -Throw
         Find-CommandFromCache 'Read-Credential' | Should -Not -Be $null
-        
+
         {Find-ModuleFromCache 'FIFA2018'} | Should -Not -Throw
         Find-ModuleFromCache 'FIFA2018' | Should -Not -Be $null
 
@@ -107,17 +107,17 @@ Describe 'Update all modules' -Tag 'LongRunning' {
 Describe 'Proper Documentation' {
 
 	It 'Updates documentation and does git diff' {
-        
+
         # install PlatyPS
         # Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
         if (!(Get-Module platyPS -List -ea 0)) {Install-Module platyPS -Force -Scope CurrentUser}
 		Import-Module platyPS
-        
+
         # update documentation
 		Push-Location -Path $root
         Update-MarkdownHelp -Path .\Docs
         New-ExternalHelp -Path .\Docs -OutputPath .\en-US -Force
-        
+
         # test it
         $diff = git diff .\Docs .\en-US
         Pop-Location
