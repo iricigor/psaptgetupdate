@@ -25,9 +25,9 @@ function Find-ModuleFromCache {
             }
         }
     }
-    
+
     END {
         Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
-    }    
+    }
 
 }

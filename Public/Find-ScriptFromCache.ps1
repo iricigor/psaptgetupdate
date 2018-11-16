@@ -24,9 +24,9 @@ function Find-ScriptFromCache {
             }
         }
     }
-        
+
     END {
         Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
     }
-    
+
 }

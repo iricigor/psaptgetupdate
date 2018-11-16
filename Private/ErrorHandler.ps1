@@ -1,5 +1,8 @@
-$executioncontext.InvokeCommand.CommandNotFoundAction = { 
-    param ($e, $e2)  
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidAssignmentToAutomaticVariable', '', Justification='False alert')]
+param()
+
+$executioncontext.InvokeCommand.CommandNotFoundAction = {
+    param ($e, $e2)
 
     $e2.StopSearch = $true
     $Module = @(Find-CommandFromCache $e -ea 0)

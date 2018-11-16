@@ -7,7 +7,7 @@ function Update-PSRepositoryCache {
     param (
 
     )
-    
+
     # function begin phase
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
@@ -30,7 +30,7 @@ function Update-PSRepositoryCache {
         $Age = 'unknown'
     }
     Write-Log -Message "Downloading completed, index file is $(size $TP.Index)MB large and $Age minutes old"
-    
+
 
     #
     # unzip index.zip
@@ -38,7 +38,7 @@ function Update-PSRepositoryCache {
 
     Write-Log -Message "Expanding archive to $($Config.IndexPath)"
     Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
-    Write-Log -Message "expanded total $((gci $Config.IndexPath).Count) files" # FIXME: This lists also old files from folder
+    Write-Log -Message "expanded total $((Get-ChildItem $Config.IndexPath).Count) files" # FIXME: This lists also old files from folder
 
     # the end
     RemoveTempFolder

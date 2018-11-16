@@ -11,12 +11,12 @@ function New-PSRepositoryCache {
         [string]$ReadFromPath,
         [switch]$Local
     )
- 
+
     # function begin phase
     $FunctionName = $MyInvocation.MyCommand.Name
     Write-Log -Message "$FunctionName starting" -TimeStampFormat 'G'
 
-    
+
     #
     # load data from PowerShell Gallery
     #
@@ -33,7 +33,7 @@ function New-PSRepositoryCache {
         Write-Log -Message "Found $($Scripts.Count) scripts"
         $Time0 = Get-Date
         $Modules = Find-Module * -Repository PSGallery
-        Write-Log -Message "Found $($Modules.Count) modules, reading time $([int](((Get-Date)-$Time0).TotalSeconds)) seconds"    
+        Write-Log -Message "Found $($Modules.Count) modules, reading time $([int](((Get-Date)-$Time0).TotalSeconds)) seconds"
     }
 
 
@@ -55,6 +55,7 @@ function New-PSRepositoryCache {
     $Lines.Keys | % {Set-Content -Path ($TP.Modules+$_) -Value ($Lines.$_)} # writing to 26 different files
     Write-Log -Message "Modules packed to $(size $($TP.Modules+'*'))MB large files"
 
+
     #
     # create scripts index
     #
@@ -75,7 +76,7 @@ function New-PSRepositoryCache {
     # generated lines are in following format: Command Module Version
     Set-Content -Path $TP.Commands -Value $Lines
     Write-Log -Message "Commands packed to $(size $TP.Commands)MB large file"
-    
+
 
     #
     # pack all files
@@ -91,7 +92,7 @@ function New-PSRepositoryCache {
 
     if ($Local) {
         Write-Log -Message "Creating local index cache at $($Config.IndexPath)"
-        Copy-Item -Path "$($TP.Modules)*",$TP.Scripts,$TP.Commands,$TP.Index -Destination $Config.IndexPath -Force 
+        Copy-Item -Path "$($TP.Modules)*",$TP.Scripts,$TP.Commands,$TP.Index -Destination $Config.IndexPath -Force
     } elseif ($Storage.Key) {
         # Upload zip to storage account
         Write-Log -Message "Connecting to cloud storage"
@@ -106,7 +107,7 @@ function New-PSRepositoryCache {
     } else {
         Write-Log -Message "No Storage Key present, skipping upload to cloud storage"
     }
-       
+
 
     RemoveTempFolder
     Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'

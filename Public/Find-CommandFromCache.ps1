@@ -5,7 +5,7 @@ function Find-CommandFromCache {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string]$CommandName
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][alias('Name')] [string[]]$CommandName
     )
 
     BEGIN {
@@ -24,12 +24,12 @@ function Find-CommandFromCache {
                     Version = $obj[2]
                     ModuleName = $obj[1]
                     Repository = 'PSGallery'
-                }        
+                }
             }
         }
     }
 
     END {
         Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
-    }    
+    }
 }

@@ -13,10 +13,10 @@ Get-ChildItem Env:\
 # Install Pester v4, if needed
 #
 
-if (!(Get-Module Pester -List | ? Version -ge 4.0.0)) {
+if (!(Get-Module Pester -List | where Version -ge 4.0.0)) {
     Write-Host "`nInstalling Pester"
     Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser -Repository PSGallery
-    Get-Module Pester -List    
+    Get-Module Pester -List
     Import-Module Pester
 }
 

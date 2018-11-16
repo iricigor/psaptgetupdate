@@ -32,12 +32,12 @@ function Update-ModuleFromCache {
                 $FoundOnline = $true
                 $ModuleOnline = ConvertFrom-Json ($_.Line)
                 if ($AllModules) {
-                    $LocalModule = $AllModules | ? Name -eq $M1 | Sort-Object Version | Select -Last 1
+                    $LocalModule = $AllModules | where Name -eq $M1 | Sort-Object Version | Select -Last 1
                 } else {
                     Write-Log -Message "searching for local module $M1"
                     $LocalModule = Get-Module $M1 -List -ea 0 -Verbose:$false | Sort-Object Version | Select -Last 1
                 }
-                
+
                 if (!$LocalModule) {
                     Write-Log -Verbosity Error -Message "$FunctionName cannot find module $M1 in local module directories"
                     continue
@@ -58,9 +58,9 @@ function Update-ModuleFromCache {
             }
         }
     }
-    
+
     END {
         Write-Log -Message "$FunctionName completed" -TimeStampFormat 'G'
-    }    
+    }
 
 }
