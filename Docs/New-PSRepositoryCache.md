@@ -1,6 +1,6 @@
 ---
 external help file: PSAptGetUpdate-help.xml
-Module Name: psaptgetupdate
+Module Name: PSAptGetUpdate
 online version:
 schema: 2.0.0
 ---
@@ -31,7 +31,6 @@ PS C:\> New-PSRepositoryCache
 ```
 
 Command will read the information from online PS Repository and pack it in temporary location. Notice that reading information will run for a long time (about 5 minutes).
-
 
 ## PARAMETERS
 
@@ -71,7 +70,6 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS

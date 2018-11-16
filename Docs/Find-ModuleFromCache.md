@@ -1,6 +1,6 @@
 ---
 external help file: PSAptGetUpdate-help.xml
-Module Name: psaptgetupdate
+Module Name: PSAptGetUpdate
 online version:
 schema: 2.0.0
 ---
