@@ -104,7 +104,7 @@ PrivateData = @{
         ProjectUri = 'https://github.com/iricigor/psaptgetupdate'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://raw.githubusercontent.com/iricigor/psaptgetupdate/master/Images/psaptgetupdate-icon-256.png'
 
         # ReleaseNotes of this module
         ReleaseNotes = 'Bug fix for command prefix, smaller file list published; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
@@ -114,7 +114,7 @@ PrivateData = @{
 } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-# HelpInfoURI = ''
+HelpInfoURI = 'https://raw.githubusercontent.com/iricigor/psaptgetupdate/master/en-US/PSAptGetUpdate-help.xml'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''

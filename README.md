@@ -173,3 +173,10 @@ If you want to contribute, please fork the code and make a new PR after!
 
 ![GitHub](https://img.shields.io/github/license/iricigor/psaptgetupdate.svg?style=flat)
 ![GitHub top language](https://img.shields.io/github/languages/top/iricigor/psaptgetupdate.svg?style=flat)
+
+
+## Module icon
+
+Module icon represents **faster update symbol** in PowerShell similar colors.
+
+![Fast Update icon](Images/psaptgetupdate-icon-256.png "Fast Update icon")
