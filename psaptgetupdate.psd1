@@ -12,9 +12,9 @@
 RootModule = '.\PSAptGetUpdate.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.9.4'
+ModuleVersion = '1.0'
 
-# Supported PSEditions
+# SIt means 100 times faster checks for Find-Module, Update-Module, etc. upported PSEditions
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
@@ -30,7 +30,7 @@ Author = 'iiric'
 Copyright = '(c) 2018 iiric. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'This module provides functionality for PowerShellGet inspired by apt-get update Linux command. This is only proof-of-concept work, though it is (almost) fully functional.'
+Description = 'This module provides functionality for PowerShellGet inspired by apt-get update Linux command. It means 100 times faster checks for Find-Module, Update-Module, etc. This is only proof-of-concept work, though it is (almost) fully functional.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @('powershellget','apt-get','apt-get-update','package-management','local-caching','powershell-gallery','linux-command','fast','update','find','module','powershell','powershell-core','powershell-cmdlets','powershell-modules')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/iricigor/psaptgetupdate/blob/master/LICENSE'
@@ -107,7 +107,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/iricigor/psaptgetupdate/master/Images/psaptgetupdate-icon-256.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Bug fix for command prefix, smaller file list published; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
+        ReleaseNotes = 'Fully documented module; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
 
     } # End of PSData hashtable
 
