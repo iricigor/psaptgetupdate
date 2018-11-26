@@ -35,16 +35,17 @@ if ($IsLinux -or $IsMacOS) {$Destination = '/tmp'}
 else {$Destination = $Env:TEMP}
 
 $Destination2 = Join-Path $Destination $ModuleName
-Remove-Item $Destination2 -Recurse -Force
+"Copying to $Destination2"
+if (Test-Path $Destination2) {Remove-Item $Destination2 -Recurse -Force}
 Copy-Item -Path . -Destination $Destination -Recurse # it creates folder $ModuleName
-"Copied to $Destination2"
 
 # remove not needed files (starting with dot and from .gitignore)
-$Exclude = ,(Get-Content '.gitignore')
-Get-ChildItem -Path $Destination2 -Include '.git*' -Recurse | Remove-Item -Recurse -Force
-Get-ChildItem -Path $Destination2 -Include $Exclude -Recurse | Remove-Item -Recurse -Force
+"Removing not needed files"
+[string[]]$Exclude = (Get-Content '.gitignore')
+Get-ChildItem -Path $Destination2 -Recurse -Force | where Name -Match '^\.' | Remove-Item -Recurse -Force
+Get-ChildItem -Path $Destination2 -Include $Exclude -Recurse -Force | Remove-Item -Recurse -Force
 
 # publish
+Read-Host "All prerequisites check. Press Enter to Publish module or Ctrl+C to abort"
 Publish-Module -Path $Destination2 -Repository PSGallery -NuGetApiKey $NugetKey -Verbose
-
 "Module $ModuleName published to PowerShell Gallery"
