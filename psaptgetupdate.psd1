@@ -14,7 +14,7 @@ RootModule = '.\PSAptGetUpdate.psm1'
 # Version number of this module.
 ModuleVersion = '1.0'
 
-# SIt means 100 times faster checks for Find-Module, Update-Module, etc. upported PSEditions
+# Supported PSEditions
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
