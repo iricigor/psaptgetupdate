@@ -31,7 +31,7 @@ function Update-ModuleFromCache {
                 Write-Log -Message "checking module $M1 for updatable version"
                 $FoundOnline = $true
                 $ModuleOnline = ConvertFrom-Json ($_.Line)
-                if ($AllModules) {
+                if ($SearchAll) {
                     $LocalModule = $AllModules | where Name -eq $M1 | Sort-Object Version | Select -Last 1
                 } else {
                     Write-Log -Message "searching for local module $M1"

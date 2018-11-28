@@ -1,6 +1,8 @@
 # PowerShell's apt-get update
 
-This module provides functionality for PowerShellGet inspired by `apt-get update` Linux command. This is only proof-of-concept work, though it is (almost) fully functional. 
+This module provides functionality for PowerShellGet inspired by Linux command `apt-get update`. You can **100 times faster** search for online modules, scripts, updatable modules, etc.
+
+*This is only proof-of-concept work, though it is (almost) fully functional.*
 
 ## Explanation
 
