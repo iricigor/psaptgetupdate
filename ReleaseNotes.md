@@ -9,6 +9,7 @@ Date: Wednesday, November 28, 2018
 ### Bug fixes in 1.0.1
 
 - Import-Module on clean system does not throw an error (no changes in functionality)
+- Update-Module properly checks for local module version
 
 ## 1.0
 

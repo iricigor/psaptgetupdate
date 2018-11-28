@@ -107,7 +107,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/iricigor/psaptgetupdate/master/Images/psaptgetupdate-icon-256.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Fully documented module; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
+        ReleaseNotes = 'Fully documented module; Bug fixes; for more info see https://github.com/iricigor/psaptgetupdate/blob/master/ReleaseNotes.md'
 
     } # End of PSData hashtable
 
