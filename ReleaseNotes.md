@@ -2,6 +2,14 @@
 
 Release notes for PowerShell module **`psaptgetupdate`** by [github.com/iricigor](https://github.com/iricigor)
 
+## 1.0.1
+
+Date: Wednesday, November 28, 2018
+
+### Bug fixes in 1.0.1
+
+- Import-Module on clean system does not throw an error (no changes in functionality)
+
 ## 1.0
 
 Date: Monday, November 26, 2018

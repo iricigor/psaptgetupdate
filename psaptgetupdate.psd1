@@ -12,7 +12,7 @@
 RootModule = '.\PSAptGetUpdate.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0'
+ModuleVersion = '1.0.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -30,7 +30,7 @@ Author = 'iiric'
 Copyright = '(c) 2018 iiric. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'This module provides functionality for PowerShellGet inspired by apt-get update Linux command. It means 100 times faster checks for Find-Module, Update-Module, etc. This is only proof-of-concept work, though it is (almost) fully functional.'
+Description = 'This module provides functionality for PowerShellGet inspired by Linux command apt-get update. You can 100 times faster search for online modules, scripts, updatable modules, etc. This is only proof-of-concept work, though it is (almost) fully functional.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
