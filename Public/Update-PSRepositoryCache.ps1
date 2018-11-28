@@ -17,7 +17,7 @@ function Update-PSRepositoryCache {
     # Prevent too fast updates
     #
     try {
-        $Age = [int](((Get-Date) - (Get-Item $IP.Commands).LastWriteTime).TotalSeconds)
+        $Age = [int](((Get-Date) - (Get-Item $IP.Commands -ea Stop).LastWriteTime).TotalSeconds)
     } catch {
         $Age = 11
     }
@@ -30,11 +30,11 @@ function Update-PSRepositoryCache {
         # get a index.zip file to $TP.Index
         #
 
+        CreateTempFolder
         Write-Log -Message "Downloading index from the Internet"
         # temporary remove ProgressBar, https://stackoverflow.com/questions/28682642/powershell-why-is-using-invoke-webrequest-much-slower-than-a-browser-download
         $OldProgressPreference = $ProgressPreference
         $ProgressPreference = 'SilentlyContinue'
-        CreateTempFolder
         $Response = Invoke-WebRequest -Uri 'https://psgallery.blob.core.windows.net/index/PSGalleryIndex.zip' -Verbose:$false -OutFile $TP.Index -PassThru
         $ProgressPreference = $OldProgressPreference
         try {
