@@ -50,7 +50,7 @@ function Update-PSRepositoryCache {
         #
 
         Write-Log -Message "Expanding archive to $($Config.IndexPath)"
-        Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
+        Microsoft.PowerShell.Archive\Expand-Archive $TP.Index -DestinationPath $Config.IndexPath -Force
         Write-Log -Message "expanded total $((Get-ChildItem $Config.IndexPath).Count) files" # FIXME: This lists also old files from folder
 
         #
