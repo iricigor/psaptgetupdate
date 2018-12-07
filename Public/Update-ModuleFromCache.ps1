@@ -4,8 +4,14 @@ function Update-ModuleFromCache {
     # priority 1: it should read index file in range of 100ms (i.e. upto 100ms)
 
     [CmdletBinding(SupportsShouldProcess)]
+
     param (
-        [Parameter(Mandatory=$false,ValueFromPipeline=$true)][alias('Name')] [string[]]$ModuleName
+    
+        [Parameter(Mandatory=$false,ValueFromPipeline=$true)]
+        [alias('Name')]
+        [string[]]$ModuleName,
+
+        [switch]$NamesOnly
     )
 
     BEGIN {
@@ -45,11 +51,15 @@ function Update-ModuleFromCache {
                 if ([version]($ModuleOnline.AdditionalMetadata.NormalizedVersion) -gt $LocalModule.Version) {
                     $Target = "Module '$M1' version $($LocalModule.Version)"
                     $Action = "Update to version $($ModuleOnline.AdditionalMetadata.NormalizedVersion)" # it can be in wierd format, see bug #9
-                    Write-Log -Message "Performing action $Action on target $Target"
-                    if ($PSCmdlet.ShouldProcess($Target,$Action)) {
-                        # Update not implemented in POC, run with -WhatIf or -Verbose switch
+                    if ($NamesOnly) {
+                        [PSCustomObject] @{Name = $M1}
                     } else {
-                        Write-Log -Message "Skipped performing action $Action on target $Target"
+                        Write-Log -Message "Performing action $Action on target $Target"
+                        if ($PSCmdlet.ShouldProcess($Target,$Action)) {
+                            # Update not implemented in POC, run with -WhatIf or -Verbose switch
+                        } else {
+                            Write-Log -Message "Skipped performing action $Action on target $Target"
+                        }    
                     }
                 }
             }

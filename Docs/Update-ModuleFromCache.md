@@ -13,7 +13,7 @@ Checks if there is newer version of specified modules from a local cache.
 ## SYNTAX
 
 ```
-Update-ModuleFromCache [[-ModuleName] <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-ModuleFromCache [[-ModuleName] <String[]>] [-NamesOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -97,6 +97,21 @@ The cmdlet is not run.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NamesOnly
+If this switch is specified, command will return only names of modules that can be updated. It can be passed via pipeline to standard Update-Module cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
 
 Required: False
 Position: Named
