@@ -57,6 +57,14 @@ While standard command Update-Module will run for minutes, this command will run
 ### Example 4
 
 ```powershell
+PS C:\> Update-ModuleFromCache -NamesOnly
+```
+
+This will return you only the list of names of modules that can be updated.
+
+### Example 5
+
+```powershell
 PS C:\> Update-ModuleFromCache -NamesOnly | Update-Module
 ```
 
