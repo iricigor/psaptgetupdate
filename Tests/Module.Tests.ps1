@@ -76,6 +76,7 @@ Describe 'Proper Functionality' {
         Find-ScriptFromCache 'Get-FolderAge' | Should -Not -Be $null
 
         {Update-ModuleFromCache 'Pester'} | Should -Not -Throw
+        {Update-ModuleFromCache 'Pester' -NamesOnly} | Should -Not -Throw
 
     }
 

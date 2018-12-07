@@ -13,7 +13,7 @@ Checks if there is newer version of specified modules from a local cache.
 ## SYNTAX
 
 ```
-Update-ModuleFromCache [[-ModuleName] <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Update-ModuleFromCache [[-ModuleName] <String[]>] [-NamesOnly] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -53,6 +53,22 @@ PS C:\> Update-ModuleFromCache -WhatIf
 
 It will check for all locally installed modules if they can be updated or not.
 While standard command Update-Module will run for minutes, this command will run for seconds.
+
+### Example 4
+
+```powershell
+PS C:\> Update-ModuleFromCache -NamesOnly
+```
+
+This will return you only the list of names of modules that can be updated.
+
+### Example 5
+
+```powershell
+PS C:\> Update-ModuleFromCache -NamesOnly | Update-Module
+```
+
+As real updating of modules is not implemented in this POC module, you can pipe list of names of updatable modules to Update-Module command for real update. Take care that some modules might be installed with admin rights.
 
 ## PARAMETERS
 
@@ -97,6 +113,21 @@ The cmdlet is not run.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NamesOnly
+If this switch is specified, command will return only names of modules that can be updated. It can be passed via pipeline to standard Update-Module cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
 
 Required: False
 Position: Named
