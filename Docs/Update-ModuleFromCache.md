@@ -54,6 +54,14 @@ PS C:\> Update-ModuleFromCache -WhatIf
 It will check for all locally installed modules if they can be updated or not.
 While standard command Update-Module will run for minutes, this command will run for seconds.
 
+### Example 4
+
+```powershell
+PS C:\> Update-ModuleFromCache -NamesOnly | Update-Module
+```
+
+As real updating of modules is not implemented in this POC module, you can pipe list of names of updatable modules to Update-Module command for real update. Take care that some modules might be installed with admin rights.
+
 ## PARAMETERS
 
 ### -ModuleName
