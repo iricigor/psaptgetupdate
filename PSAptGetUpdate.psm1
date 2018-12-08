@@ -47,4 +47,6 @@ if ($V) {
     Write-Host "'Get-Command -Module $ModName | Get-Help | Select Name, Synopsis' for explanation on all commands`n"
 }
 
+# initial actions
+if (Test-Path $TP.LockFile) {Remove-Item $TP.LockFile -Force}
 Update-PSRepositoryCache

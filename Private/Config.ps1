@@ -20,6 +20,7 @@ $Script:Config = New-Object PSObject -Property @{
 
     # General names
     IndexFile = 'PSGalleryIndex.zip'
+    LockFile = 'psaptgetupdate.lock'
 
     # Config file names
     ModulesCache = 'Modules.Cache'
@@ -38,6 +39,7 @@ $Script:TP = New-Object PSObject -Property @{
     Modules  = Join-Path $Config.TempPath $Config.ModulesCache
     Scripts  = Join-Path $Config.TempPath $Config.ScriptsCache
     Commands = Join-Path $Config.TempPath $Config.CommandsCache
+    LockFile = Join-Path $Config.TempPath $Config.LockFile
 }
 
 # IndexPath File Locations, used like $IP.Modules

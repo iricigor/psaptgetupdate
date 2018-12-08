@@ -26,6 +26,7 @@ function Update-ModuleFromCache {
             Write-Log -Message "Reading list of all modules from the system"
             $SearchAll = $true
             $AllModules = Get-Module -ListAvailable -Verbose:$false | where {$_.RepositorySourceLocation.Host -eq 'www.powershellgallery.com'}
+            # We do not use Get-InstalledModule although it returns smaller number of modules, because we do not spend much time on search anyway
             $ModuleName = $AllModules.Name | Select -Unique
         }
         foreach ($M1 in $ModuleName) {
