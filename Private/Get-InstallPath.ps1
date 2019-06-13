@@ -22,15 +22,19 @@ function Get-InstallPath {
     $ModulePaths = $Env:PSModulePath -split (';:'[[int]($IsLinux -or $IsMacOS)])
     if ($defaultPath -in $ModulePaths) {
         $defaultPath
-        break
-    }
-    # default path is not in findable by get-module, try to avoid it
-    foreach ($P1 in $ModulePaths) {
-        if (Test-PathWritable $P1) {
-            $P1
-            break
+    } else {
+        # default path is not in findable by get-module, try to avoid it
+        $writablePath = ''
+        foreach ($P1 in $ModulePaths) {
+            if (([string]::IsNullOrEmpty($writablePath)) -and (Test-PathWritable $P1)) {
+                $writablePath = $P1
+            }
+        }
+        if ([string]::IsNullOrEmpty($writablePath)) {
+            # we found no writable paths, return default one
+            $defaultPath
+        } else {
+            $writablePath
         }
     }
-    # we found no writable paths, return default one
-    $defaultPath
 }
